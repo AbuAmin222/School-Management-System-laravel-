@@ -36,15 +36,15 @@
         </li>
         <li class="menu-label">UI Elements</li>
         <li>
-            <a href="javascript:;" class="has-arrow">
+            <<a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bi bi-droplet-fill"></i>
                 </div>
-                <div class="menu-title">Widgets</div>
+                <div class="menu-title">Level`s</div>
             </a>
             <ul>
-                <li> <a href="widgets-static-widgets.html"><i class="bi bi-circle"></i>Static Widgets</a>
+                <li> <a href="{{ route('school.dashboard.grade.index') }}"><i class="bi bi-circle"></i>All Level`s</a>
                 </li>
-                <li> <a href="widgets-data-widgets.html"><i class="bi bi-circle"></i>Data Widgets</a>
+                <li> <a href="{{ route('school.dashboard.grade.create') }}"><i class="bi bi-circle"></i>Create new level</a>
                 </li>
             </ul>
         </li>

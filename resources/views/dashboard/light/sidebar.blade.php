@@ -39,12 +39,10 @@
             <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bi bi-droplet-fill"></i>
                 </div>
-                <div class="menu-title">Widgets</div>
+                <div class="menu-title">Level`s</div>
             </a>
             <ul>
-                <li> <a href="widgets-static-widgets.html"><i class="bi bi-circle"></i>Static Widgets</a>
-                </li>
-                <li> <a href="widgets-data-widgets.html"><i class="bi bi-circle"></i>Data Widgets</a>
+                <li> <a href="{{ route('school.dashboard.grade.index') }}"><i class="bi bi-circle"></i>All Level`s</a>
                 </li>
             </ul>
         </li>
@@ -52,24 +50,43 @@
             <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bi bi-basket2-fill"></i>
                 </div>
-                <div class="menu-title">eCommerce</div>
+                <div class="menu-title">Subjects</div>
             </a>
             <ul>
-                <li> <a href="ecommerce-products-list.html"><i class="bi bi-circle"></i>Products List</a>
+                <li> <a href="{{ route('school.dashboard.subject.index') }}"><i class="bi bi-circle"></i>All Subjects</a>
                 </li>
-                <li> <a href="ecommerce-products-grid.html"><i class="bi bi-circle"></i>Products Grid</a>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bi bi-basket2-fill"></i>
+                </div>
+                <div class="menu-title">Students</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('school.dashboard.student.index') }}"><i class="bi bi-circle"></i>All Students</a>
                 </li>
-                <li> <a href="ecommerce-products-categories.html"><i class="bi bi-circle"></i>Categories</a>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bi bi-basket2-fill"></i>
+                </div>
+                <div class="menu-title">Teachers</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('school.dashboard.teacher.index') }}"><i class="bi bi-circle"></i>All Teachers</a>
                 </li>
-                <li> <a href="ecommerce-orders.html"><i class="bi bi-circle"></i>Orders</a>
-                </li>
-                <li> <a href="ecommerce-orders-detail.html"><i class="bi bi-circle"></i>Order details</a>
-                </li>
-                <li> <a href="ecommerce-add-new-product.html"><i class="bi bi-circle"></i>Add New Product</a>
-                </li>
-                <li> <a href="ecommerce-add-new-product-2.html"><i class="bi bi-circle"></i>Add New Product 2</a>
-                </li>
-                <li> <a href="ecommerce-transactions.html"><i class="bi bi-circle"></i>Transactions</a>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bi bi-basket2-fill"></i>
+                </div>
+                <div class="menu-title">Sections</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('school.dashboard.section.index') }}"><i class="bi bi-circle"></i>All Sections</a>
                 </li>
             </ul>
         </li>
