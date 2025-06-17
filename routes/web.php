@@ -32,15 +32,15 @@ Route::get('/Test', function () {
 //      )
 //      (
 //          Students =>
-//              [/, /Add, /Get-Data, /Get-Active-Grades, /Get-Active-Sections, /Get-Active-Stages, /Add-Section, /Change-Master]
+//              [/, /Add, /Get-Data, /Update, /Delete]
 //      )
 //      (
 //          Subjects =>
-//              [/, /Add, /Get-Data, /Get-Active-Grades, /Get-Active-Sections, /Get-Active-Stages, /Add-Section, /Change-Master]
+//              [/, /Add, /Get-Data, /Update, /Delete]
 //      )
 //      (
-//          Lecturers =>
-//              [/, /Add, /Get-Data, /Get-Active-Grades, /Get-Active-Sections, /Get-Active-Stages, /Add-Section, /Change-Master]
+//          Lectures =>
+//              [/, /Add, /Get-Data, /Update, /Delete]
 //      )
 
 // NAME: school.dashboard.
@@ -58,15 +58,15 @@ Route::get('/Test', function () {
 //      )
 //      (
 //          student.
-//              [index, add, getdata, getactive, getactive.section, getactive.stage, addsection, changemaster]
+//              [index, add, getdata, update, delete]
 //      )
 //      (
 //          subject.
-//              [index, add, getdata, getactive, getactive.section, getactive.stage, addsection, changemaster]
+//              [index, add, getdata, update, delete]
 //      )
 //      (
-//          lecturer.
-//              [index, add, getdata, getactive, getactive.section, getactive.stage, addsection, changemaster]
+//          lecture.
+//              [index, add, getdata, update, delete]
 //      )
 
 
@@ -100,37 +100,28 @@ Route::prefix('/LearnSchool')->name('school.')->group(function () {
             Route::post('/Active', 'active')->name('active');
         });
 
-        Route::prefix('/Students')->name('student.')->controller(StudentController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/Add', 'add')->name('add');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::get('/Get-Active-Grades', 'getactive')->name('getactive');
-            Route::get('/Get-Active-Sections', 'getactivesection')->name('getactive.section');
-            Route::get('/Get-Active-Stages', 'getactivestage')->name('getactive.stage');
-            Route::post('/Add-Section', 'addsection')->name('addsection');
-            Route::post('/Change-Master', 'changemaster')->name('changemaster');
-        });
-
         Route::prefix('/Subjects')->name('subject.')->controller(SubjectController::class)->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/Add', 'add')->name('add');
             Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::get('/Get-Active-Grades', 'getactive')->name('getactive');
-            Route::get('/Get-Active-Sections', 'getactivesection')->name('getactive.section');
-            Route::get('/Get-Active-Stages', 'getactivestage')->name('getactive.stage');
-            Route::post('/Add-Section', 'addsection')->name('addsection');
-            Route::post('/Change-Master', 'changemaster')->name('changemaster');
+            Route::post('/Add', 'add')->name('add');
+            Route::post('/Update', 'update')->name('update');
+            Route::post('/Delete', 'delete')->name('delete');
         });
 
-        Route::prefix('/Lecturers')->name('lecturer.')->controller(LectureController::class)->group(function () {
+        Route::prefix('/Students')->name('student.')->controller(StudentController::class)->group(function () {
             Route::get('/', 'index')->name('index');
-            Route::post('/Add', 'add')->name('add');
             Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::get('/Get-Active-Grades', 'getactive')->name('getactive');
-            Route::get('/Get-Active-Sections', 'getactivesection')->name('getactive.section');
-            Route::get('/Get-Active-Stages', 'getactivestage')->name('getactive.stage');
-            Route::post('/Add-Section', 'addsection')->name('addsection');
-            Route::post('/Change-Master', 'changemaster')->name('changemaster');
+            Route::post('/Add', 'add')->name('add');
+            Route::post('/Update', 'update')->name('update');
+            Route::post('/Delete', 'delete')->name('delete');
+        });
+
+        Route::prefix('/Lectures')->name('lecture.')->controller(LectureController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/Get-Data', 'getdata')->name('getdata');
+            Route::post('/Add', 'add')->name('add');
+            Route::post('/Update', 'update')->name('update');
+            Route::post('/Delete', 'delete')->name('delete');
         });
     });
 });

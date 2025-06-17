@@ -8,7 +8,7 @@
     <!--start content-->
     <main class="page-content">
         <!--Start Teachers Add Modal-->
-        <div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="stagesModalLabel" aria-hidden="true">
+        <div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -102,11 +102,11 @@
         <!--End Teachers Add Modal-->
 
         <!--Start Update Teachers Modal-->
-        <div class="modal fade" id="update-modal" tabindex="-1" aria-labelledby="stagesModalLabel" aria-hidden="true">
+        <div class="modal fade" id="update-modal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="stagesModalLabel">Teacher Update</h5>
+                        <h5 class="modal-title" id="teachersModalLabel">Teacher Update</h5>
                         <button type="button" class="btn-close ms-0" data-bs-dismiss="modal"
                             aria-label="إغلاق"></button>
                     </div>

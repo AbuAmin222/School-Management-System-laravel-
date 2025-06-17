@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->string('title');
             $table->string('book');
-            $table->foreignId('teatcher_id')->constrained('teatchers')->cascadeOnDelete();
+            $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
             $table->foreignId('grade_id')->constrained('grades')->cascadeOnDelete();
 
             $table->timestamps();

@@ -3,86 +3,111 @@
 namespace App\Http\Controllers\Lectures;
 
 use App\Http\Controllers\Controller;
+use App\Models\Lecture;
+use App\Models\Subject;
 use Illuminate\Http\Request;
+use Yajra\DataTables\Facades\DataTables;
 
 class LectureController extends Controller
 {
-        function index()
+    function index()
     {
-        return view('dashboard.lectures.index');
+        $data = Subject::all();
+        return view('dashboard.lectures.index', compact('data'));
     }
-    // function getdata(Request $request)
-    // {
-    //     $data = Section::query();
-    //     return DataTables::of($data)
-    //         ->addIndexColumn()
-    //         ->addColumn('name', function ($query) {
-    //             return 'Section ' . ' ' . $query->name;
-    //         })
-    //         ->addColumn('status', function ($query) {
-    //             if ($query->status == 'active') {
-    //                 return 'Active';
-    //             } else {
-    //                 return 'Inactive';
-    //             }
-    //         })
-    //         ->addColumn('action', function ($query) {
-    //             $section = Section::query()->where('status', 'active')->orderBy('id', 'desc')->first();
-    //             $sectiondisable = Section::query()->where('status', 'inactive')->first();
-    //             if ($section->id == $query->id) {
-    //                 return ' <div data-id="' . $query->id . '" class="form-check form-switch active-section-switch">
-    //                         <input data-status="inactive" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-    //                     </div>';
-    //             }
-    //             if (@$sectiondisable->id == $query->id) {
-    //                 return '<div data-status="active" data-id="' . $query->id . '" class="form-check form-switch active-section-switch">
-    //                         <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
-    //                     </div>';
-    //             }
-    //             return '<div class="form-check form-switch">
-    //                         <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
-    //                     </div>';
-    //         })
-    //         ->make(true);
-    // }
+    function getdata(Request $request)
+    {
+        $data = Lecture::query();
+        return DataTables::of($data)
+            ->addIndexColumn()
+            ->addColumn('title', function ($query) {
+                return $query->title;
+            })
+            ->addColumn('describtion', function ($query) {
+                return $query->describtion;
+            })
+            ->addColumn('link', function ($query) {
+                return $query->link;
+            })
+            ->addColumn('subject_id', function ($query) {
+                return $query->subject->title;
+            })
+            ->addColumn('action', function ($query) {
+                $data_attr = '';
+                $data_attr .= 'data-id="' . $query->id . '" ';
+                $data_attr .= 'data-title="' . e($query->title) . '" ';
+                $data_attr .= 'data-describtion="' . e($query->describtion) . '" ';
+                $data_attr .= 'data-link="' . e($query->link) . '" ';
+                $data_attr .= 'data-subject_id="' . e($query->subject_id) . '" ';
 
-    // function add(Request $request)
-    // {
-    //     // dd($request);
-    //     $newcount = (int)$request->count_section;
-    //     $currentcount = Section::count();
+                $action = '';
+                $action .= '<div class="table-actions d-flex align-items-center gap-3 fs-6">';
+                $action .= '<a ' . $data_attr . '  data-bs-toggle="modal" data-bs-target="#update-modal" href="javascript:;" class="text-warning edit-btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit"><i class="bi bi-pencil-fill"></i></a>';
 
-    //     if ($newcount > $currentcount) {
-    //         for ($i = $currentcount + 1; $i <= $newcount; $i++) {
-    //             Section::create([
-    //                 'name' => $i,
-    //                 'status' => 'active'
-    //             ]);
-    //         }
-    //         $sectionInActive = Section::query()->where('status', 'inactive')->get();
-    //         foreach ($sectionInActive as $section) {
-    //             $section->update([
-    //                 'status' => 'active',
-    //             ]);
-    //         }
-    //     } elseif ($newcount < $currentcount) {
-    //         $limit = $currentcount - $newcount;
-    //         $lastSections = Section::query()->orderBy('id', 'desc')->limit($limit)->get();
-    //         // dd($lastSections);
-    //         foreach ($lastSections as $section) {
-    //             $section->update([
-    //                 'status' => 'inactive',
-    //             ]);
-    //         }
-    //     } elseif ($newcount == $currentcount) {
-    //         $sectionInActives = Section::query()->where('status', 'inactive')->get();
-    //         foreach ($sectionInActives as $sectionA) {
-    //             $sectionA->update([
-    //                 'status' => 'active',
-    //             ]);
-    //         }
-    //     }
-    //     return response()->json(['success' => 'The operation was successfully...']);
-    // }
+                $data_attr .= 'data-url="' . route('school.dashboard.lecture.delete') . '" ';
+                $action .= '<a ' . $data_attr . '  href="javascript:;" class="text-danger delete-btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a>';
 
+                return $action;
+            })
+            ->make(true);
+    }
+
+    function add(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'describtion' => 'required',
+            'link' => 'required',
+            'subject_id' => 'required'
+        ], [
+            'title.required' => 'The Title is required',
+            'describtion.required' => 'The Describtion is required',
+            'link.required' => 'The Link is required',
+            'subject_id.required' => 'The Subject is required',
+        ]);
+
+        $subject = Subject::query()->findOrFail($request->subject_id);
+
+        Lecture::create([
+            'title' => $request->title,
+            'describtion' => $request->describtion,
+            'link' => $request->link,
+            'subject_id' => $subject->id,
+        ]);
+        return response()->json(['success' => 'Success for adding new lecture:' . $request->title . '.']);
+    }
+
+    function update(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'describtion' => 'required',
+            'link' => 'required',
+            'subject_id' => 'required'
+        ], [
+            'title.required' => 'The Title is required',
+            'describtion.required' => 'The Describtion is required',
+            'link.required' => 'The Link is required',
+            'subject_id.required' => 'The Subject is required',
+        ]);
+
+        $subject = Subject::query()->findOrFail($request->subject_id);
+        $lecture = Lecture::query()->findOrFail($request->id);
+
+        $lecture->update([
+            'title' => $request->title,
+            'describtion' => $request->describtion,
+            'link' => $request->link,
+            'subject_id' => $subject->id,
+        ]);
+
+        return response()->json(['success' => 'Success for updating the lecture:' . $lecture->title]);
+    }
+
+    function delete(Request $request)
+    {
+        $data = Lecture::query()->findOrFail($request->id);
+        $data->delete();
+        return response()->json(['success' => 'Success for deleting the lecture title: (' . $data->title . ')']);
+    }
 }

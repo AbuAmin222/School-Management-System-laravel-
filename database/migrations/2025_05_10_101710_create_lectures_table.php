@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('title');
-            $table->text('decribtion');
+            $table->text('describtion');
             $table->string('link')->unique();
 
             $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();

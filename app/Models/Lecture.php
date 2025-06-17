@@ -9,4 +9,9 @@ class Lecture extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }

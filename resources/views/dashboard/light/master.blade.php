@@ -44,12 +44,14 @@
             max-height: 70vh;
             overflow-y: auto;
         }
-        .swal-footer{
+
+        .swal-footer {
             display: flex !important;
             justify-content: center !important;
             gap: 10px;
         }
-        .swal-button{
+
+        .swal-button {
             min-width: 100px;
         }
     </style>
@@ -685,10 +687,13 @@
     <!--end wrapper-->
 
 
+
+    <!-- jQuery -->
+    <script src="{{ asset('dashboard/asset/js/jquery.min.js') }}"></script>
+
     <!-- Bootstrap bundle JS -->
     <script src="{{ asset('dashboard/asset/js/bootstrap.bundle.min.js') }}"></script>
     <!--plugins-->
-    <script src="{{ asset('dashboard/asset/js/jquery.min.js') }}"></script>
     <script src="{{ asset('dashboard/asset/plugins/simplebar/js/simplebar.min.js') }}"></script>
     <script src="{{ asset('dashboard/asset/plugins/metismenu/js/metisMenu.min.js') }}"></script>
     <script src="{{ asset('dashboard/asset/plugins/perfect-scrollbar/js/perfect-scrollbar.js') }}"></script>
@@ -723,6 +728,10 @@
                 contentType: false,
                 data: data,
                 success: function(res) {
+                    if (res.error) {
+                        swal("error", res.error, "error");
+                        return;
+                    }
                     $('#add-modal').modal('hide');
                     $('#add-form').trigger("reset");
                     toastr.success(res.success);
@@ -761,6 +770,11 @@
                 contentType: false,
                 data: data,
                 success: function(res) {
+                    if (res.error) {
+                        swal("error", res.error, "error");
+                        return;
+                    }
+
                     $('#update-modal').modal('hide');
                     toastr.success(res.success);
                     table.draw();
@@ -798,7 +812,7 @@
                 var button = $(this);
                 var id = $(this).data('id');
                 var url = $(this).data('url');
-
+                // alert(url + ' - ' + id); // ✅ هذا سيعرض القيم
                 swal({
                     title: "Are you sure?",
                     text: "You will not be able to recover this row data!",
@@ -830,9 +844,18 @@
                                 _token: "{{ csrf_token() }}",
                             },
                             success: function(response) {
-                                toastr.success(response.success);
-                                table.draw();
-                            },
+                                if (response.success) {
+                                    swal("Deleted!", response.success, "success");
+                                    toastr.success(response.success);
+                                    table.draw();
+                                } else if (response.error || response.message) {
+                                    swal("Error!", response.error || response.message,
+                                        "error");
+                                    toastr.error(response.error || response.message);
+                                } else {
+                                    swal("Error!", "Something went wrong!", "error");
+                                }
+                            }
                         });
                     } else {
                         toastr.success("Cancelled");
