@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Lectures;
 use App\Http\Controllers\Controller;
 use App\Models\Lecture;
 use App\Models\Subject;
+use App\Models\Teacher;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -13,7 +14,8 @@ class LectureController extends Controller
     function index()
     {
         $data = Subject::all();
-        return view('dashboard.lectures.index', compact('data'));
+        $dataTeacher = Teacher::all();
+        return view('dashboard.lectures.index', compact('data', 'dataTeacher'));
     }
     function getdata(Request $request)
     {
@@ -27,10 +29,18 @@ class LectureController extends Controller
                 return $query->describtion;
             })
             ->addColumn('link', function ($query) {
-                return $query->link;
+                return '
+                    <a href="' . $query->link . '" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-play-circle-fill"></i> Show Lecture
+                    </a>
+                ';
             })
             ->addColumn('subject_id', function ($query) {
                 return $query->subject->title;
+            })
+            ->addColumn('teacher', function ($query) {
+                return $query->teacher->name;
             })
             ->addColumn('action', function ($query) {
                 $data_attr = '';
@@ -49,6 +59,7 @@ class LectureController extends Controller
 
                 return $action;
             })
+            ->rawColumns(['title', 'describtion', 'link', 'subject_id', 'teacher', 'action'])
             ->make(true);
     }
 
@@ -57,22 +68,27 @@ class LectureController extends Controller
         $request->validate([
             'title' => 'required',
             'describtion' => 'required',
-            'link' => 'required',
-            'subject_id' => 'required'
+            'link' => ['required', 'url', 'regex:/^https:\/\/.*/i'],
+            'subject_id' => 'required',
+            'teacher' => 'required',
         ], [
             'title.required' => 'The Title is required',
             'describtion.required' => 'The Describtion is required',
             'link.required' => 'The Link is required',
+            'link.url' => 'The Link must be a valid url',
             'subject_id.required' => 'The Subject is required',
+            'teacher.required' => 'The Teacher is required',
         ]);
 
         $subject = Subject::query()->findOrFail($request->subject_id);
+        $teacher = Teacher::query()->findOrFail($request->teacher);
 
         Lecture::create([
             'title' => $request->title,
             'describtion' => $request->describtion,
             'link' => $request->link,
             'subject_id' => $subject->id,
+            'teacher_id' => $teacher->id
         ]);
         return response()->json(['success' => 'Success for adding new lecture:' . $request->title . '.']);
     }
@@ -83,22 +99,28 @@ class LectureController extends Controller
             'title' => 'required',
             'describtion' => 'required',
             'link' => 'required',
-            'subject_id' => 'required'
+            'link' => ['required', 'url', 'regex:/^https:\/\/.*/i'],
+            'subject_id' => 'required',
+            'teacher' => 'required',
         ], [
             'title.required' => 'The Title is required',
             'describtion.required' => 'The Describtion is required',
             'link.required' => 'The Link is required',
+            'link.url' => 'The Link must be a valid url',
             'subject_id.required' => 'The Subject is required',
+            'teacher.required' => 'The Teacher is required',
         ]);
 
         $subject = Subject::query()->findOrFail($request->subject_id);
         $lecture = Lecture::query()->findOrFail($request->id);
+        $teacher = Teacher::query()->findOrFail($request->teacher);
 
         $lecture->update([
             'title' => $request->title,
             'describtion' => $request->describtion,
             'link' => $request->link,
             'subject_id' => $subject->id,
+            'teacher_id' => $teacher->id
         ]);
 
         return response()->json(['success' => 'Success for updating the lecture:' . $lecture->title]);

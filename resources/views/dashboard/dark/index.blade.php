@@ -1,4 +1,4 @@
-@extends('dashboard.dark.master2')
+@extends('dashboard.dark.master')
 @section('content')
 
        <!--start content-->

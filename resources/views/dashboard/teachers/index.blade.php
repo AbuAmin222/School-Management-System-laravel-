@@ -8,7 +8,7 @@
     <!--start content-->
     <main class="page-content">
         <!--Start Teachers Add Modal-->
-        <div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
+        <div class="modal fade btn-add" id="add-modal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -210,48 +210,137 @@
         <!--End Update Teachers Modal-->
 
         <!-- Start Filter Modal -->
-        <div class="row">
-            <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                <div class="card radius-10 w-100">
-                    <div class="card-header bg-transparent">
-                        <div class="row g-3 align-items-center">
-                            <div class="col">
-                                <h5 class="mb-0"> Filter</h5>
-                            </div>
-                            <div class="col">
-                                <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="teachersModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                        <div class="card radius-10 w-100">
+                            <div class="card-header bg-transparent">
+                                <div class="row g-3 align-items-center">
+                                    <div class="w-100 d-flex justify-content-between align-items-center">
+                                        <h5 class="modal-title mb-0">Filter</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row mb-3">
-                            <div class="col-md-4 mb-3">
-                                <input type="text" id="search-name" class="form-control search-input"
-                                    placeholder="Teacher Name ">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <input type="email" id="search-email" class="form-control search-input"
-                                    placeholder="email">
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <input type="text" id="search-phone" class="form-control  search-input"
-                                    placeholder="Phone Number">
-                            </div>
-                        </div>
-                        <div class="d-flex justify-content-end gap-2 mb-3">
-                            <button type="submit" id="search-btn" class="btn btn-outline-success col-6">Search</button>
-                            <button type="reset" id="clean-btn" class="btn btn-outline-secondary col-6 ">Clean</button>
-                        </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
 
-                        <button class="btn btn-outline-primary col-12 btn-add" data-bs-toggle="modal"
-                            data-bs-target="#add-modal">
-                            Insert Teacher
-                        </button>
+                                    <!-- Teacher Name -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-name" class="form-control search-input"
+                                            placeholder="Teacher Name">
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-phone" class="form-control search-input"
+                                            placeholder="Phone Number">
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="email" id="search-email" class="form-control search-input"
+                                            placeholder="Email">
+                                    </div>
+
+                                    <!-- Specialization -->
+                                    <div class="row-md-4 mb-3">
+                                        <input type="text" id="search-specialization"
+                                            class="form-control search-input" placeholder="Specialization">
+                                    </div>
+                                    <div class="row mb-3">
+                                        <!-- Date of Birth Range -->
+                                        <div class="col-md-6 mb-3">
+                                            <div class="row g-2 align-items-center border p-3 rounded">
+                                                <div class="col-auto">
+                                                    <label for="start_date" class="form-label mb-0">DOB From:</label>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="date" id="search-start_date"
+                                                        class="form-control search-input">
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label for="end_date" class="form-label mb-0">To:</label>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="date" id="search-end_date"
+                                                        class="form-control search-input">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Hire Date Range -->
+                                        <div class="col-md-6 mb-3 ">
+                                            <div class="row g-2 align-items-center border p-3 rounded">
+                                                <div class="col-auto">
+                                                    <label for="start_HireDate" class="form-label mb-0">Hire From:</label>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="date" id="search-start_HireDate"
+                                                        class="form-control search-input">
+                                                </div>
+                                                <div class="col-auto">
+                                                    <label for="end_HireDate" class="form-label mb-0">To:</label>
+                                                </div>
+                                                <div class="col">
+                                                    <input type="date" id="search-end_HireDate"
+                                                        class="form-control search-input">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Qualification -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-qualification" class="form-control search-input">
+                                            <option value="" selected disabled>Select Qualification</option>
+                                            <option value="diploma">Diploma</option>
+                                            <option value="bachelors">Bachelors</option>
+                                            <option value="master">Master</option>
+                                            <option value="doctora">Doctora</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Gender -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-gender" class="form-control search-input">
+                                            <option value="" disabled>Select Gender</option>
+                                            <option value="male" selected>Male</option>
+                                            <option value="female">Female</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-status" class="form-control search-input">
+                                            <option value="" disabled>Select Status</option>
+                                            <option value="active" selected>Active</option>
+                                            <option value="inactive">In-Active</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mb-3">
+                                    <button type="submit" id="search-btn"
+                                        class="btn btn-outline-success col-6">Search</button>
+                                    <button type="reset" id="clean-btn"
+                                        class="btn btn-outline-secondary col-6">Clean</button>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-secondary col-12 btn-add"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
         <!-- End Filter Modal -->
 
@@ -268,9 +357,20 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-primary col-12" data-bs-toggle="modal" data-bs-target="#add-modal">
-                            View the acadimec Teachers
-                        </button>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-filter" data-bs-toggle="modal"
+                                    data-bs-target="#filter-modal">
+                                    Filter Teacher
+                                </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
+                                    data-bs-target="#add-modal">
+                                    Insert Teacher
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -330,10 +430,19 @@
 
             ajax: {
                 url: '{{ route('school.dashboard.teacher.getdata') }}',
-                data: function (d) {
+                data: function(d) {
                     d.name = $('#search-name').val();
                     d.email = $('#search-email').val();
                     d.phone = $('#search-phone').val();
+                    d.specialization = $('#search-specialization').val();
+                    d.qualification = $('#search-qualification').val();
+                    d.gender = $('#search-gender').val();
+                    d.status = $('#search-status').val();
+                    d.start_date = $('#search-start_date').val();
+                    d.end_date = $('#search-end_date').val();
+                    d.start_HireDate = $('#search-start_HireDate').val();
+                    d.end_HireDate = $('#search-end_HireDate').val();
+
                 }
             },
 
@@ -420,15 +529,7 @@
             // },
             //
         });
-        $('#search-btn').on('click', function(e) {
-            e.preventDefault(); // prevent default form submission
-            table.draw();
-        });
-        $('#clean-btn').on('click', function(e) {
-            e.preventDefault();
-            $('.search-input').val('').trigger('change');
-            table.draw();
-        });
+
         $(document).ready(function() {
             $(document).on('click', '.update_btn', function(e) {
                 e.preventDefault();

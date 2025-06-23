@@ -567,7 +567,7 @@
             </div>
             <!--navigation-->
 
-                @include('dashboard.dark.sidebar2')
+                @include('dashboard.dark.sidebar')
 
             <!--end navigation-->
 

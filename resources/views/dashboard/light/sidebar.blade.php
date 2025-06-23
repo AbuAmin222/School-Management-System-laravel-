@@ -7,9 +7,9 @@
                 <div class="menu-title">Dashboard</div>
             </a>
             <ul>
-                <li> <a href="index.html"><i class="bi bi-circle"></i>Blue Dashboard</a>
+                <li> <a href="{{ route('school.dashboard.view.light') }}"><i class="bi bi-circle"></i>light Dashboard</a>
                 </li>
-                <li> <a href="index2.html"><i class="bi bi-circle"></i>Color Dashboard</a>
+                <li> <a href="{{ route('school.dashboard.view.dark') }}"><i class="bi bi-circle"></i>Dark Dashboard</a>
                 </li>
             </ul>
         </li>
@@ -109,45 +109,6 @@
             </a>
             <ul>
                 <li> <a href="{{ route('school.dashboard.student.index') }}"><i class="bi bi-circle"></i>All Students</a>
-                </li>
-            </ul>
-        </li>
-        <li class="menu-label">Forms & Tables</li>
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class="bi bi-file-earmark-break-fill"></i>
-                </div>
-                <div class="menu-title">Forms</div>
-            </a>
-            <ul>
-                <li> <a href="form-elements.html"><i class="bi bi-circle"></i>Form Elements</a>
-                </li>
-                <li> <a href="form-input-group.html"><i class="bi bi-circle"></i>Input Groups</a>
-                </li>
-                <li> <a href="form-layouts.html"><i class="bi bi-circle"></i>Forms Layouts</a>
-                </li>
-                <li> <a href="form-validations.html"><i class="bi bi-circle"></i>Form Validation</a>
-                </li>
-                <li> <a href="form-wizard.html"><i class="bi bi-circle"></i>Form Wizard</a>
-                </li>
-                <li> <a href="form-date-time-pickes.html"><i class="bi bi-circle"></i>Date Pickers</a>
-                </li>
-                <li> <a href="form-select2.html"><i class="bi bi-circle"></i>Select2</a>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class="bi bi-file-earmark-spreadsheet-fill"></i>
-                </div>
-                <div class="menu-title">Tables</div>
-            </a>
-            <ul>
-                <li> <a href="table-basic-table.html"><i class="bi bi-circle"></i>Basic Table</a>
-                </li>
-                <li> <a href="table-advance-tables.html"><i class="bi bi-circle"></i>Advance Tables</a>
-                </li>
-                <li> <a href="table-datatable.html"><i class="bi bi-circle"></i>Data Table</a>
                 </li>
             </ul>
         </li>
@@ -253,33 +214,14 @@
         </li>
         <li class="menu-label">Others</li>
         <li>
-            <a class="has-arrow" href="javascript:;">
-                <div class="parent-icon"><i class="bi bi-music-note-list"></i>
-                </div>
-                <div class="menu-title">Menu Levels</div>
-            </a>
-            <ul>
-                <li> <a class="has-arrow" href="javascript:;"><i class="bi bi-circle"></i>Level One</a>
-                    <ul>
-                        <li> <a class="has-arrow" href="javascript:;"><i class="bi bi-circle"></i>Level Two</a>
-                            <ul>
-                                <li> <a href="javascript:;"><i class="bi bi-circle"></i>Level Three</a>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-        </li>
-        <li>
-            <a href="https://codervent.com/skodash/documentation/index.html" target="_blank">
+            <a href="https://europa.eu/europass/eportfolio/api/eprofile/shared-profile/e.g+diaeldin-habib/a043ab2c-68ad-4f43-8f11-757e0f9c3264?view=html" target="_blank">
                 <div class="parent-icon"><i class="bi bi-file-code-fill"></i>
                 </div>
                 <div class="menu-title">Documentation</div>
             </a>
         </li>
         <li>
-            <a href="https://themeforest.net/user/codervent" target="_blank">
+            <a href="https://europa.eu/europass/eportfolio/api/eprofile/shared-profile/e.g+diaeldin-habib/a043ab2c-68ad-4f43-8f11-757e0f9c3264?view=html" target="_blank">
                 <div class="parent-icon"><i class="bi bi-telephone-fill"></i>
                 </div>
                 <div class="menu-title">Support</div>

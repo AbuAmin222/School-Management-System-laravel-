@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\dashboard\IndexController;
 use App\Http\Controllers\Grades\GradeController;
 use App\Http\Controllers\Lectures\LectureController;
 use App\Http\Controllers\Owners\OwnerController;
@@ -82,7 +83,14 @@ Route::get('/Test', function () {
 
 Route::prefix('/LearnSchool')->name('school.')->group(function () {
     Route::prefix('/Dashboard')->name('dashboard.')->group(function () {
-
+        Route::get('/', function () {
+            return view('dashboard.light.index');
+        });
+        Route::prefix('/View')->name('view.')->controller(IndexController::class)->group(function () {
+            Route::get('/', 'light')->name('index');
+            Route::get('/Light', 'light')->name('light');
+            Route::get('/Dark', 'dark')->name('dark');
+        });
         Route::prefix('/Owners')->name('owner.')->controller(OwnerController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/Add', 'add')->name('add');
@@ -109,7 +117,7 @@ Route::prefix('/LearnSchool')->name('school.')->group(function () {
             Route::post('/Change-Status', 'changestatus')->name('changestatus');
         });
 
-        Route::prefix('/Teachers')->middleware('teacher')->name('teacher.')->controller(TeacherController::class)->group(function () {
+        Route::prefix('/Teachers')->name('teacher.')->controller(TeacherController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/Get-Data', 'getdata')->name('getdata');
             Route::post('/Add', 'add')->name('add');

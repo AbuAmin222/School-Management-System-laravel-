@@ -52,6 +52,18 @@
                                     <div class="invalid-feedback"></div>
 
                                 </div>
+                                <div class="mb-4 form-group">
+                                    <label>Teacher: </label>
+                                    <select class="form-control" name="teacher" id="teacher">
+                                        <option value="" selected disabled> Select Teacher </option>
+                                        @foreach ($dataTeacher as $teacher)
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+
                                 <button class="btn btn-outline-success col-12" type="submit">Insert</button>
 
                             </form>
@@ -107,6 +119,17 @@
                                         <option value="" selected disabled> Select Subject </option>
                                         @foreach ($data as $subject)
                                             <option value="{{ $subject->id }}">{{ $subject->title }}</option>
+                                        @endforeach
+                                    </select>
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+                                <div class="mb-4 form-group">
+                                    <label>Teacher: </label>
+                                    <select class="form-control" name="teacher" id="teacher">
+                                        <option value="" selected disabled> Select Teacher </option>
+                                        @foreach ($dataTeacher as $teacher)
+                                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
                                         @endforeach
                                     </select>
                                     <div class="invalid-feedback"></div>
@@ -170,6 +193,7 @@
                                         <th>Describtion</th>
                                         <th>Link</th>
                                         <th>Subject</th>
+                                        <th>Teachers</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -232,6 +256,13 @@
                         data: 'subject_id',
                         name: 'subject_id',
                         title: 'Subject',
+                        orderable: false,
+                        searchable: false,
+                    },
+                    {
+                        data: 'teacher',
+                        name: 'teacher',
+                        title: 'Teachers',
                         orderable: false,
                         searchable: false,
                     },

@@ -22,14 +22,31 @@ class TeacherController extends Controller
         $data = Teacher::select('teachers.*', 'users.email')->join('users', 'teachers.user_id', '=', 'users.id');
         return DataTables::of($data)
             ->filter(function ($query) use ($request) {
-                if ($request->get('name')) {
-                    $query->where('name', 'like', '%' . $request->get('name') . '%');
+                $filters = [
+                    'name',
+                    'phone',
+                    'specialization',
+                    'qualification',
+                    'gender',
+                    'status'
+                ];
+
+                foreach ($filters as $field) {
+                    if ($request->filled($field)) {
+                        $query->where($field, 'like', '%' . $request->get($field) . '%');
+                    }
                 }
-                if ($request->get('phone')) {
-                    $query->where('phone', 'like', '%' . $request->get('phone') . '%');
-                }
-                if ($request->get('email')) {
+
+                if ($request->filled('email')) {
                     $query->where('users.email', 'like', '%' . $request->get('email') . '%');
+                }
+
+                if ($request->filled('start_date') && $request->filled('end_date')) {
+                    $query->whereBetween('date_of_birth', [$request->start_date, $request->end_date]);
+                }
+
+                if ($request->filled('start_HireDate') && $request->filled('end_HireDate')) {
+                    $query->whereBetween('hire_date', [$request->start_HireDate, $request->end_HireDate]);
                 }
             })
             ->addIndexColumn()

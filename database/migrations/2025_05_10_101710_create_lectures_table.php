@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('link')->unique();
 
             $table->foreignId('subject_id')->constrained('subjects')->cascadeOnDelete();
+            $table->foreignId('teacher_id')->constrained('teachers')->cascadeOnDelete();
+
 
             $table->timestamps();
         });

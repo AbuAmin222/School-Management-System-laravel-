@@ -38,6 +38,8 @@
         type="text/css" />
 
 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
     <title> @yield('title') </title>
     @yield('style')
     <style>
@@ -55,7 +57,6 @@
         .swal-button {
             min-width: 100px;
         }
-
     </style>
 </head>
 
@@ -867,6 +868,15 @@
 
             })
         })
+        $('#search-btn').on('click', function(e) {
+            e.preventDefault(); // prevent default form submission
+            table.draw();
+        });
+        $('#clean-btn').on('click', function(e) {
+            e.preventDefault();
+            $('.search-input').val('').trigger('change');
+            table.draw();
+        });
     </script>
 
     <!--Actions-->

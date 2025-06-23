@@ -126,6 +126,81 @@
         </div>
         <!--End Adding Subject Modal-->
 
+        <!-- Start Filter Modal -->
+        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="teachersModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                        <div class="card radius-10 w-100">
+                            <div class="card-header bg-transparent">
+                                <div class="row g-3 align-items-center">
+                                    <div class="w-100 d-flex justify-content-between align-items-center">
+                                        <h5 class="modal-title mb-0">Filter</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <!-- Title -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-title" class="form-control search-input"
+                                            placeholder="Title">
+                                    </div>
+
+                                    <!-- Book -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="name" id="search-book" class="form-control search-input"
+                                            placeholder="Book">
+                                    </div>
+
+                                    <!-- Teacher Name -->
+                                    <div class="col-md-4 mb-3">
+                                        <select name="teacher" id="search-teacher" class="form-control search-input">
+                                            <option value="" selected disabled> Select Teacher </option>
+                                            @foreach ($TData as $teacher)
+                                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Grade -->
+                                    <div class="col-md-4 mb-3">
+                                        <select name="grade" id="search-grade" class="form-control search-input">
+                                            <option value="" selected disabled> Select Grade </option>
+                                            @foreach ($GData as $grade)
+                                                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mb-3">
+                                    <button type="submit" id="search-btn"
+                                        class="btn btn-outline-success col-6">Search</button>
+                                    <button type="reset" id="clean-btn"
+                                        class="btn btn-outline-secondary col-6">Clean</button>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-secondary col-12 btn-add"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Filter Modal -->
+
+
+
         <!--start Adding scroll row-->
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-12 d-flex">
@@ -138,9 +213,20 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-primary col-12" data-bs-toggle="modal" data-bs-target="#add-modal">
-                            Adding new subject
-                        </button>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-filter" data-bs-toggle="modal"
+                                    data-bs-target="#filter-modal">
+                                    Filter Subject
+                                </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
+                                    data-bs-target="#add-modal">
+                                    Insert Subject
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -195,6 +281,13 @@
 
             ajax: {
                 url: '{{ route('school.dashboard.subject.getdata') }}',
+                data: function(d) {
+                    d.title = $('#search-title').val();
+                    d.book = $('#search-book').val();
+                    d.teacher = $('#search-teacher').val();
+                    d.grade = $('#search-grade').val();
+                }
+
             },
 
             columns: [{

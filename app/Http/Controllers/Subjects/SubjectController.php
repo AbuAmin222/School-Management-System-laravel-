@@ -19,8 +19,29 @@ class SubjectController extends Controller
     }
     function getdata(Request $request)
     {
-        $data = Subject::query();
+        $data = Subject::select('subjects.*', 'teachers.name as teacher_name', 'grades.name as grade_name')
+            ->join('teachers', 'subjects.teacher_id', '=', 'teachers.id')
+            ->join('grades', 'subjects.grade_id', '=', 'grades.id');
+
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                if ($request->filled('title')) {
+                    $query->where('subjects.title', 'like', '%' . $request->title . '%');
+                }
+
+                if ($request->filled('book')) {
+                    $query->where('subjects.book', 'like', '%' . $request->book . '%');
+                }
+
+                if ($request->filled('teacher')) {
+                    $query->where('subjects.teacher_id', $request->teacher); // من قائمة المعلمين
+                }
+
+                if ($request->filled('grade')) {
+                    $query->where('subjects.grade_id', $request->grade); // من قائمة الصفوف
+                }
+            })
+
             ->addIndexColumn()
             ->addColumn('title', function ($query) {
                 return $query->title;
@@ -105,7 +126,7 @@ class SubjectController extends Controller
             'book' => 'required|mimes:pdf,doc,docx,epub,mobi,txt|max:5120',
             'teacher_id' => 'required',
             'grade_id' => 'required',
-        ],[
+        ], [
             'title.required' => 'The Title is required',
             'book.required' => 'The Book is required',
             'book.mimes' => 'The Book must be a pdf, doc, docx, epub, mobi, txt file',

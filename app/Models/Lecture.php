@@ -14,4 +14,9 @@ class Lecture extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+
+    function teacher()
+    {
+        return $this->belongsTo(Teacher::class);
+    }
 }
