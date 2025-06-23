@@ -39,6 +39,7 @@
 
 
     <title> @yield('title') </title>
+    @yield('style')
     <style>
         .modal-dialog-scrollable .modal-body {
             max-height: 70vh;
@@ -54,6 +55,7 @@
         .swal-button {
             min-width: 100px;
         }
+
     </style>
 </head>
 

@@ -28,8 +28,14 @@
                                     <input class="form-control" name = "title">
                                 </div>
                                 <div class="mb-4 form-group">
+                                    <div class="mb-3">
+                                        <label for="book">Current Book:</label><br>
+                                        <a id="current-book-link" href="#" target="_blank"
+                                            class="btn btn-outline-primary btn-sm">View Current Book</a>
+                                    </div>
                                     <label>Book: </label>
-                                    <input class="form-control" name = "book">
+                                    <input type="file" class="form-control" name="book" id="book"
+                                        accept=".pdf,.doc,.docx,.epub,.mobi,.txt">
                                 </div>
                                 <div class="mb-4 form-group">
                                     <label>Teacher: </label>
@@ -50,7 +56,7 @@
                                     </select>
 
                                 </div>
-                                <button class="btn btn-outline-success col-12" type="submit">Insert</button>
+                                <button class="btn btn-outline-success col-12" type="submit">Update</button>
 
                             </form>
                         </div>
@@ -84,7 +90,8 @@
                                 </div>
                                 <div class="mb-4 form-group">
                                     <label>Book: </label>
-                                    <input class="form-control" name = "book">
+                                    <input type="file" class="form-control" name="book" id="book"
+                                        accept=".pdf,.doc,.docx,.epub,.mobi,.txt">
                                 </div>
                                 <div class="mb-4 form-group">
                                     <label>Teacher: </label>
@@ -248,12 +255,15 @@
 
             $('#update-form [name="id"]').val(id);
             $('#update-form [name="title"]').val(title);
-            $('#update-form [name="book"]').val(book);
-            $('#teacher_id').val(teacher_id); // يحدد الخيار الذي يساوي teacher_id
-            $('#grade_id').val(grade_id); // يحدد الخيار الذي يساوي grade_id
+            $('#teacher_id').val(teacher_id);
+            $('#grade_id').val(grade_id);
 
+            // عرض رابط الكتاب الحالي
+            let bookUrl = '/uploads/books/' + book;
+            $('#current-book-link').attr('href', bookUrl).text(book).show();
+
+            // إظهار المودال
             $('#update-modal').modal('show');
-
         });
     </script>
 @endsection

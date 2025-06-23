@@ -26,7 +26,13 @@ class SubjectController extends Controller
                 return $query->title;
             })
             ->addColumn('book', function ($query) {
-                return $query->book;
+                if ($query->book) {
+                    $url = route('school.dashboard.subject.download', ['file_name' => $query->book]);
+                    $fileName = basename($query->book); // Get just the file name
+                    return '<a href="' . $url . '" class="btn btn-outline-info" download="' . e($fileName) . '">' . e($fileName) . '</a>';
+                } else {
+                    return '<span class="btn btn-outline-light">No File</span>';
+                }
             })
             ->addColumn('teacher_id', function ($query) {
                 $teacher = Teacher::query()->findOrFail($query->teacher_id);
@@ -54,7 +60,7 @@ class SubjectController extends Controller
                 $action .= '<a ' . $data_attr . '  href="javascript:;" class="text-danger delete-btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a>';
                 return $action;
             })
-            ->rawColumns(['action'])
+            ->rawColumns(['book', 'action'])
             ->make(true);
     }
 
@@ -62,32 +68,55 @@ class SubjectController extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'book' => 'required',
+            'book' => 'required|mimes:pdf,doc,docx,epub,mobi,txt|max:5120',
             'teacher_id' => 'required',
             'grade_id' => 'required',
+        ], [
+            'title.required' => 'The Title is required',
+            'book.required' => 'The Book is required',
+            'book.mimes' => 'The Book must be a pdf, doc, docx, epub, mobi, txt file',
+            'teacher_id.required' => 'The Teacher is required',
+            'grade_id.required' => 'The Grade is required',
         ]);
+
+        $name = 'LearnSchool_' . time() . '_' . rand() . $request->file('book')->getClientOriginalName();
+        $request->file('book')->move(public_path('uploads\books'), $name);
+
+
         $teacher = Teacher::query()->findOrFail($request->teacher_id);
         $grade = Grade::query()->findOrFail($request->grade_id);
+
         if ($grade->status == 'inactive') {
-            return response()->json(['error' => 'Selected grade is inactive(select other grade).']);
+            return response()->json(['error' => 'The Garde was selected is inactive(Please select grade active).']);
         }
         Subject::create([
             'title' => $request->title,
-            'book' => $request->book,
+            'book' => $name,
             'teacher_id' => $teacher->id,
             'grade_id' => $grade->id,
         ]);
-        return response()->json(['success' => 'The operation was successfully...']);
+        return response()->json(['success' => 'Subject ( ' . $request->title . ') added successfully...']);
     }
 
     function update(Request $request)
     {
         $request->validate([
             'title' => 'required',
-            'book' => 'required',
+            'book' => 'required|mimes:pdf,doc,docx,epub,mobi,txt|max:5120',
             'teacher_id' => 'required',
             'grade_id' => 'required',
+        ],[
+            'title.required' => 'The Title is required',
+            'book.required' => 'The Book is required',
+            'book.mimes' => 'The Book must be a pdf, doc, docx, epub, mobi, txt file',
+            'teacher_id.required' => 'The Teacher is required',
+            'grade_id.required' => 'The Grade is required',
         ]);
+
+        $name = 'LearnSchool_' . time() . '_' . rand() . $request->file('book')->getClientOriginalName();
+        $request->file('book')->move(public_path('uploads\books'), $name);
+
+
         $subject = Subject::query()->findOrFail($request->id);
         $teacher = Teacher::query()->findOrFail($request->teacher_id);
         $grade = Grade::query()->findOrFail($request->grade_id);
@@ -95,19 +124,31 @@ class SubjectController extends Controller
         if ($grade->status == 'inactive') {
             return response()->json(['error' => 'Selected grade is inactive(select other grade).']);
         }
+
         $subject->update([
             'title' => $request->title,
-            'book' => $request->book,
+            'book' => $name,
             'teacher_id' => $teacher->id,
             'grade_id' => $grade->id,
         ]);
 
-        return response()->json(['success' => 'Success Editted book title:' . $subject->title]);
+        return response()->json(['success' => 'Subject ( ' . $request->title . ') edited successfully...']);
     }
     function delete(Request $request)
     {
         $data = Subject::query()->findOrFail($request->id);
         $data->delete();
         return response()->json(['success' => 'Success for deleting the book title: (' . $data->title . ')']);
+    }
+
+    function download($file_name)
+    {
+        $path = public_path('uploads/books/' . $file_name);
+        if (file_exists($path)) {
+            return response()->download($path);
+        }
+
+        abort(404, 'File not found.');
+        return response()->json(['error' => 'File not found.']);
     }
 }

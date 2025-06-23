@@ -29,21 +29,31 @@ class SectionController extends Controller
                 }
             })
             ->addColumn('action', function ($query) {
-                $section = Section::query()->where('status', 'active')->orderBy('id', 'desc')->first();
-                $sectiondisable = Section::query()->where('status', 'inactive')->first();
-                if ($section->id == $query->id) {
-                    return ' <div data-id="' . $query->id . '" class="form-check form-switch active-section-switch">
-                            <input data-status="inactive" class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked>
-                        </div>';
+                $section = Section::where('status', 'active')->orderBy('id', 'desc')->first();
+                $sectiondisable = Section::where('status', 'inactive')->first();
+
+                if ($section && $section->id == $query->id) {
+                    return '
+                        <div data-id="' . $query->id . '" class="form-check form-switch active-section-switch">
+                            <input data-status="inactive" class="form-check-input" type="checkbox" role="switch" checked>
+                        </div>
+                    ';
                 }
-                if (@$sectiondisable->id == $query->id) {
-                    return '<div data-status="active" data-id="' . $query->id . '" class="form-check form-switch active-section-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked">
-                        </div>';
+
+                if ($sectiondisable && $sectiondisable->id == $query->id) {
+                    return '
+                        <div data-status="active" data-id="' . $query->id . '" class="form-check form-switch active-section-switch">
+                            <input class="form-check-input" type="checkbox" role="switch">
+                        </div>
+                    ';
                 }
-                return '<div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDisabled" disabled>
-                        </div>';
+
+                // في حال لا يوجد أي قسم active أو inactive (احتياطيًا)
+                return '
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" role="switch" disabled>
+                    </div>
+                ';
             })
             ->make(true);
     }

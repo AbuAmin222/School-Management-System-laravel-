@@ -311,16 +311,180 @@
             //     url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/ar.json',
             // },
         });
-        $('.master-checkbox').on('change', function() {
-            var target = $(this).data('target');
-            var checked = $(this).prop('checked');
 
-            if (!checked) {
-                $(target).find('input[type=checkbox]').prop('disabled', true); // تعطيل التشيك بوكسات
-            } else {
-                $(target).find('input[type=checkbox]').prop('disabled', false); // تمكين التشيك بوكسات
-            }
+        // ============ تحميل الحالة الحالية من الخادم ============
+
+        $(document).ready(function() {
+            loadActiveGrades();
+            loadActiveStages();
+            // ============ أحداث الماستر ============
+
+            $('.master-checkbox').on('change', function() {
+                const targetClass = $(this).data('target');
+                const isChecked = $(this).is(':checked');
+
+                const checkboxes = $(targetClass).find('input[type=checkbox]');
+                checkboxes.prop('disabled', !isChecked).prop('checked', isChecked);
+
+                checkboxes.each(function() {
+                    $(this).trigger('change');
+                });
+            });
+            // ============ حدث تغيير الصف ============
+
+            $('.grade-checkbox').on('change', function() {
+                const checkbox = $(this);
+                const isChecked = checkbox.is(':checked') ? 1 : 0;
+
+                const data = {
+                    _token: "{{ csrf_token() }}",
+                    name: checkbox.data('name'),
+                    stage: checkbox.data('stage'),
+                    tag: checkbox.data('grade'),
+                    status: isChecked,
+                };
+
+                $.post("{{ route('school.dashboard.grade.add') }}", data, function(res) {
+                    toastr.success(res.success);
+                    table.draw();
+                });
+            });
+            // ============ تحميل الأقسام حسب الصف ============
+
+            $(document).on('click', '.btn-add-section', function(e) {
+                e.preventDefault();
+                const gradeId = $(this).data('grade-id');
+                $('#gradetag').val($(this).data('grade'));
+
+                $.ajax({
+                    url: "{{ route('school.dashboard.grade.getactive.section') }}",
+                    type: 'GET',
+                    data: {
+                        gradeId
+                    },
+                    success: function(res) {
+                        const activeSections = res.names.map(Number);
+
+                        $('.section-checkbox').each(function() {
+                            const checkbox = $(this);
+                            const sectionId = checkbox.data('section');
+
+                            checkbox.prop('checked', activeSections.includes(
+                                sectionId));
+                            checkbox.prop('disabled', false);
+                        });
+                    }
+                });
+            });
+            // ============ تفعيل/تعطيل الأقسام ============
+
+            $('.section-checkbox').on('change', function() {
+                const checkbox = $(this);
+                const isChecked = checkbox.is(':checked') ? 1 : 0;
+                const data = {
+                    _token: "{{ csrf_token() }}",
+                    section: checkbox.data('section'),
+                    gradetag: $('#gradetag').val(),
+                    status: isChecked,
+                };
+
+                $.post("{{ route('school.dashboard.grade.addsection') }}", data, function(res) {
+                    toastr.success(res.success);
+                    table.draw();
+                });
+            });
         });
+
+
+        function loadActiveGrades() {
+            $.get("{{ route('school.dashboard.grade.getactive') }}", function(res) {
+                const activeTags = res.tags.map(Number);
+                $('.grade-checkbox').each(function() {
+                    const checkbox = $(this);
+                    const gradeId = checkbox.data('grade');
+                    if (activeTags.includes(gradeId)) {
+                        checkbox.prop('checked', true).prop('disabled', false);
+                    }
+                });
+            });
+        }
+
+        function loadActiveStages() {
+            $.get("{{ route('school.dashboard.grade.getactive.stage') }}", function(res) {
+                const activeStages = res.tags;
+                $('.master-checkbox').each(function() {
+                    const checkbox = $(this);
+                    const stageTag = checkbox.data('tag');
+                    const target = checkbox.data('target');
+
+                    if (activeStages.includes(stageTag)) {
+                        checkbox.prop('checked', true).prop('disabled', false);
+                    } else {
+                        checkbox.prop('checked', false);
+                        $(target).find('input[type=checkbox]').prop('disabled', true);
+                    }
+                });
+            });
+        }
+    </script>
+
+    {{-- <script>
+        $(document).ready(function() {
+
+            // عند تغيير الماستر
+            $('.master-checkbox').on('change', function() {
+                const targetClass = $(this).data('target');
+                const isChecked = $(this).is(':checked');
+
+                const checkboxes = $(targetClass).find('input[type=checkbox]');
+
+                checkboxes.prop('disabled', !isChecked); // تمكين/تعطيل
+                checkboxes.prop('checked', isChecked); // تحديد/إلغاء تحديد
+
+                checkboxes.each(function() {
+                    $(this).trigger('change'); // إرسال Ajax تلقائيًا
+                });
+            });
+
+            // عند تغيير تشيك بوكس صف معين
+            $('.grade-checkbox').on('change', function() {
+                const checkbox = $(this);
+                const isChecked = checkbox.is(':checked') ? 1 : 0;
+
+                const data = {
+                    _token: "{{ csrf_token() }}",
+                    name: checkbox.data('name'),
+                    stage: checkbox.data('stage'),
+                    tag: checkbox.data('grade'),
+                    status: isChecked,
+                };
+
+                $.post("{{ route('school.dashboard.grade.add') }}", data, function(res) {
+                    toastr.success(res.success);
+                    table.draw(); // إعادة تحميل الجدول إذا كنت تستخدم DataTables
+                });
+            });
+
+            // إعداد زر إضافة قسم
+            $(document).on('click', '.btn-add-section', function(e) {
+                e.preventDefault();
+                const gradetag = $(this).data('grade');
+                $('#gradetag').val(gradetag);
+            });
+        });
+
+        // $('.master-checkbox').on('change', function() {
+        //     var target = $(this).data('target');
+        //     var checked = $(this).prop('checked');
+        //     let isChecked = $(this).is(':checked');
+
+
+        //     if (!checked) {
+        //         $(target).find('input[type=checkbox]').prop('disabled', true); // تعطيل التشيك بوكسات
+        //     } else {
+        //         $(target).find('input[type=checkbox]').prop('disabled', false); // تمكين التشيك بوكسات
+        //     }
+        // });
         $('.grade-checkbox').on('change', function() {
             var checkbox = $(this);
             var ischeck = checkbox.is(':checked') ? 1 : 0;
@@ -393,26 +557,26 @@
 
             })
         });
-        $('.master-checkbox').on('change', function() {
-            var checkbox = $(this);
-            var status = checkbox.is(':checked') ? 1 : 0;
-            var tag = checkbox.data('tag');
+        // $('.master-checkbox').on('change', function() {
+        //     var checkbox = $(this);
+        //     var status = checkbox.is(':checked') ? 1 : 0;
+        //     var tag = checkbox.data('tag');
 
-            $.ajax({
-                url: "{{ route('school.dashboard.grade.changemaster') }}",
-                type: 'post',
-                data: {
-                    '_token': "{{ csrf_token() }}",
-                    'tag': tag,
-                    'status': status,
-                },
-                success: function(res) {
-                    toastr.success(res.success);
-                    table.draw();
-                },
-            });
+        //     $.ajax({
+        //         url: "{{ route('school.dashboard.grade.changemaster') }}",
+        //         type: 'post',
+        //         data: {
+        //             '_token': "{{ csrf_token() }}",
+        //             'tag': tag,
+        //             'status': status,
+        //         },
+        //         success: function(res) {
+        //             toastr.success(res.success);
+        //             table.draw();
+        //         },
+        //     });
 
-        });
+        // });
         $('.section-checkbox').on('change', function() {
             var checkbox = $(this);
             var status = checkbox.is(':checked') ? 1 : 0;
@@ -470,5 +634,5 @@
 
             })
         });
-    </script>
+    </script> --}}
 @endsection

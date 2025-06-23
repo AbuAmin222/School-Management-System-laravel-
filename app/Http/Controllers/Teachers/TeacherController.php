@@ -18,8 +18,20 @@ class TeacherController extends Controller
     }
     function getdata(Request $request)
     {
-        $data = Teacher::query();
+        // $data = Teacher::query();
+        $data = Teacher::select('teachers.*', 'users.email')->join('users', 'teachers.user_id', '=', 'users.id');
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                if ($request->get('name')) {
+                    $query->where('name', 'like', '%' . $request->get('name') . '%');
+                }
+                if ($request->get('phone')) {
+                    $query->where('phone', 'like', '%' . $request->get('phone') . '%');
+                }
+                if ($request->get('email')) {
+                    $query->where('users.email', 'like', '%' . $request->get('email') . '%');
+                }
+            })
             ->addIndexColumn()
             ->addColumn('name', function ($query) {
                 return $query->name;
@@ -104,6 +116,9 @@ class TeacherController extends Controller
             'qualification' => 'required',
             'gender' => 'required',
         ]);
+
+        $name = $request->name;
+
         $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->phone),
@@ -120,12 +135,14 @@ class TeacherController extends Controller
             'status' => $request->status,
         ]);
 
-        return response()->json(['success' => 'The operation was successfully...']);
+        return response()->json(['success' => 'Teacher (' . $name . ') has been added...']);
     }
     function update(Request $request)
     {
         $teatcher = Teacher::query()->findOrFail($request->id);
         $user = User::query()->findOrFail($teatcher->user_id);
+
+        $name = $teatcher->name;
 
         $request->validate([
             'name' =>   'required',
@@ -152,27 +169,33 @@ class TeacherController extends Controller
             'status' => $request->status,
         ]);
 
-        return response()->json(['success' => 'The operation was successfully...']);
+        return response()->json(['success' => 'Teacher (' . $name . ') has been updated...']);
     }
 
     function delete(Request $request)
     {
         $teacher = Teacher::query()->findOrFail($request->id);
+
+        $name = $teacher->name;
+
         if ($teacher) {
             $teacher->update([
                 'status' => 'inactive',
             ]);
         }
-        return response()->json(['success' => 'The operation was successfully...']);
+        return response()->json(['success' => 'Teacher (' . $name . ') has been in-active...']);
     }
     function active(Request $request)
     {
         $teacher = Teacher::query()->findOrFail($request->id);
+
+        $name = $teacher->name;
+
         if ($teacher) {
             $teacher->update([
                 'status' => 'active',
             ]);
         }
-        return response()->json(['success' => 'The operation was successfully...']);
+        return response()->json(['success' => 'Teacher (' . $name . ') has been active...']);
     }
 }

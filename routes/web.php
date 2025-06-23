@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Grades\GradeController;
 use App\Http\Controllers\Lectures\LectureController;
+use App\Http\Controllers\Owners\OwnerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Sections\SectionController;
 use App\Http\Controllers\Stages\stageController;
@@ -16,8 +17,13 @@ Route::get('/', function () {
 Route::get('/Test', function () {
     return view('test');
 });
-
+// Admin@admin.com
+// +1 (874) 783-4847
 // URL: LearnSchool/Dashboard/
+//      (
+//          Owners =>
+//              [/, /Add, /Get-Data, /Update, /Delete, /Active]
+//      )
 //      (
 //          Grades =>
 //              [/, /Add, /Get-Data, /Get-Active-Grades, /Get-Active-Sections, /Get-Active-Stages, /Add-Section, /Change-Master]
@@ -36,7 +42,7 @@ Route::get('/Test', function () {
 //      )
 //      (
 //          Subjects =>
-//              [/, /Add, /Get-Data, /Update, /Delete]
+//              [/, /Add, /Get-Data, /Update, /Delete, (/Download/Download-File)]
 //      )
 //      (
 //          Lectures =>
@@ -44,6 +50,10 @@ Route::get('/Test', function () {
 //      )
 
 // NAME: school.dashboard.
+//      (
+//          owner.
+//              [index, add, getdata, update, delete, active]
+//      )
 //      (
 //          grade.
 //              [index, add, getdata, getactive, getactive.section, getactive.stage, addsection, changemaster]
@@ -62,7 +72,7 @@ Route::get('/Test', function () {
 //      )
 //      (
 //          subject.
-//              [index, add, getdata, update, delete]
+//              [index, add, getdata, update, delete, download]
 //      )
 //      (
 //          lecture.
@@ -73,6 +83,14 @@ Route::get('/Test', function () {
 Route::prefix('/LearnSchool')->name('school.')->group(function () {
     Route::prefix('/Dashboard')->name('dashboard.')->group(function () {
 
+        Route::prefix('/Owners')->name('owner.')->controller(OwnerController::class)->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/Add', 'add')->name('add');
+            Route::get('/Get-Data', 'getdata')->name('getdata');
+            Route::post('/Update', 'update')->name('update');
+            Route::post('/Delete', 'delete')->name('delete');
+            Route::post('/Active', 'active')->name('active');
+        });
         Route::prefix('/Grades')->name('grade.')->controller(GradeController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::post('/Add', 'add')->name('add');
@@ -91,7 +109,7 @@ Route::prefix('/LearnSchool')->name('school.')->group(function () {
             Route::post('/Change-Status', 'changestatus')->name('changestatus');
         });
 
-        Route::prefix('/Teachers')->name('teacher.')->controller(TeacherController::class)->group(function () {
+        Route::prefix('/Teachers')->middleware('teacher')->name('teacher.')->controller(TeacherController::class)->group(function () {
             Route::get('/', 'index')->name('index');
             Route::get('/Get-Data', 'getdata')->name('getdata');
             Route::post('/Add', 'add')->name('add');
@@ -106,6 +124,7 @@ Route::prefix('/LearnSchool')->name('school.')->group(function () {
             Route::post('/Add', 'add')->name('add');
             Route::post('/Update', 'update')->name('update');
             Route::post('/Delete', 'delete')->name('delete');
+            Route::get('/Download/{file_name}', 'download')->name('download');
         });
 
         Route::prefix('/Students')->name('student.')->controller(StudentController::class)->group(function () {

@@ -39,6 +39,17 @@
             <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bi bi-basket2-fill"></i>
                 </div>
+                <div class="menu-title">Owners</div>
+            </a>
+            <ul>
+                <li> <a href="{{ route('school.dashboard.owner.index') }}"><i class="bi bi-circle"></i>All Owners</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="javascript:;" class="has-arrow">
+                <div class="parent-icon"><i class="bi bi-basket2-fill"></i>
+                </div>
                 <div class="menu-title">Teachers</div>
             </a>
             <ul>

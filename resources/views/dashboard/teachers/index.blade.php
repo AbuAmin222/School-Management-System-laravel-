@@ -209,6 +209,53 @@
         </div>
         <!--End Update Teachers Modal-->
 
+        <!-- Start Filter Modal -->
+        <div class="row">
+            <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                <div class="card radius-10 w-100">
+                    <div class="card-header bg-transparent">
+                        <div class="row g-3 align-items-center">
+                            <div class="col">
+                                <h5 class="mb-0"> Filter</h5>
+                            </div>
+                            <div class="col">
+                                <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-4 mb-3">
+                                <input type="text" id="search-name" class="form-control search-input"
+                                    placeholder="Teacher Name ">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input type="email" id="search-email" class="form-control search-input"
+                                    placeholder="email">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <input type="text" id="search-phone" class="form-control  search-input"
+                                    placeholder="Phone Number">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2 mb-3">
+                            <button type="submit" id="search-btn" class="btn btn-outline-success col-6">Search</button>
+                            <button type="reset" id="clean-btn" class="btn btn-outline-secondary col-6 ">Clean</button>
+                        </div>
+
+                        <button class="btn btn-outline-primary col-12 btn-add" data-bs-toggle="modal"
+                            data-bs-target="#add-modal">
+                            Insert Teacher
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- End Filter Modal -->
+
+
         <!--start row-->
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-12 d-flex">
@@ -283,6 +330,11 @@
 
             ajax: {
                 url: '{{ route('school.dashboard.teacher.getdata') }}',
+                data: function (d) {
+                    d.name = $('#search-name').val();
+                    d.email = $('#search-email').val();
+                    d.phone = $('#search-phone').val();
+                }
             },
 
             columns: [{
@@ -368,7 +420,15 @@
             // },
             //
         });
-
+        $('#search-btn').on('click', function(e) {
+            e.preventDefault(); // prevent default form submission
+            table.draw();
+        });
+        $('#clean-btn').on('click', function(e) {
+            e.preventDefault();
+            $('.search-input').val('').trigger('change');
+            table.draw();
+        });
         $(document).ready(function() {
             $(document).on('click', '.update_btn', function(e) {
                 e.preventDefault();
