@@ -18,8 +18,8 @@ class TeacherController extends Controller
     }
     function getdata(Request $request)
     {
-        // $data = Teacher::query();
-        $data = Teacher::select('teachers.*', 'users.email')->join('users', 'teachers.user_id', '=', 'users.id');
+        $data = Teacher::select('teachers.*', 'users.email')
+            ->join('users', 'teachers.user_id', '=', 'users.id');
         return DataTables::of($data)
             ->filter(function ($query) use ($request) {
                 $filters = [

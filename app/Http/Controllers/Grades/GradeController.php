@@ -17,7 +17,9 @@ class GradeController extends Controller
      */
     function index()
     {
-        return view('dashboard.grades.index');
+        $Grade_data = Grade::query()->get();
+        $Stage_data = Stage::query()->get();
+        return view('dashboard.grades.index', compact('Grade_data', 'Stage_data'));
     }
 
     /**
@@ -28,18 +30,44 @@ class GradeController extends Controller
      */
     function getdata(Request $request)
     {
-        $data = Grade::query();
+        $data = Grade::select('grades.*', 'stages.name AS stage_name')
+            ->join('stages', 'grades.stage_id', '=', 'stages.id');
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                $filters = [
+                    'grade',
+                    'stage',
+                    'status',
+                ];
+                foreach ($filters as $field) {
+                    if ($request->filled('grade')) {
+                        $query->where('grades.name', 'like', '%' . $request->grade . '%');
+                    }
+
+                    if ($request->filled('stage')) {
+                        $query->where('stages.name', 'like', '%' . $request->stage . '%');
+                    }
+
+                    if ($request->filled('status')) {
+                        $query->where('grades.status', $request->status);
+                    }
+                }
+            })
             ->addIndexColumn()
+            ->addColumn('grade', function ($query) {
+                return $query->name;
+            })
             ->addColumn('stage', function ($query) {
-                return $query->stage->name;
+                return $query->stage_name;
             })
             ->addColumn('status', function ($query) {
-                if ($query->status == 'active') {
-                    return 'Active';
-                } else {
-                    return 'Inactive';
-                }
+                return $query->status === 'active' ? 'Active' : 'Inactive';
+
+                // if ($query->status == 'active') {
+                //     return 'Active';
+                // } else {
+                //     return 'Inactive';
+                // }
             })
             ->addColumn('action', function ($query) {
                 if ($query->status == 'active') {

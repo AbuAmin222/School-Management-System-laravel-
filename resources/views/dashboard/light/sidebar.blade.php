@@ -72,10 +72,10 @@
             <a href="javascript:;" class="has-arrow">
                 <div class="parent-icon"><i class="bi bi-droplet-fill"></i>
                 </div>
-                <div class="menu-title">Level`s</div>
+                <div class="menu-title">Grades</div>
             </a>
             <ul>
-                <li> <a href="{{ route('school.dashboard.grade.index') }}"><i class="bi bi-circle"></i>All Level`s</a>
+                <li> <a href="{{ route('school.dashboard.grade.index') }}"><i class="bi bi-circle"></i>All Grades</a>
                 </li>
             </ul>
         </li>

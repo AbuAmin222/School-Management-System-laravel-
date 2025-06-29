@@ -151,26 +151,118 @@
         </div>
         <!--End add Lectures Modal-->
 
-        <!--start Lectures row-->
+        <!-- Start Filter Modal -->
+        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="lecturesModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                        <div class="card radius-10 w-100">
+                            <div class="card-header bg-transparent">
+                                <div class="row g-3 align-items-center">
+                                    <div class="w-100 d-flex justify-content-between align-items-center">
+                                        <h5 class="modal-title mb-0">Lectures Filter</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+
+                                    <!-- Title -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-title" class="form-control search-input"
+                                            placeholder="Title">
+                                    </div>
+
+                                    <!-- Describtion -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-describtion" class="form-control search-input"
+                                            placeholder="Describtion">
+                                    </div>
+
+                                    <!-- Link -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-link" class="form-control search-input"
+                                            placeholder="Link">
+                                    </div>
+
+                                    <!-- Subject -->
+                                    <div class="col-md-6 mb-3">
+                                        <select id="search-subject_id" class="form-control search-input">
+                                            <option value="" selected disabled>Select Subjects</option>
+                                            @foreach ($data as $subject)
+                                                <option value="{{ $subject->id }}">{{ $subject->title }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Teachers -->
+                                    <div class="col-md-6 mb-3">
+                                        <select id="search-teacher" class="form-control search-input">
+                                            <option value="" selected disabled>Select Teachers</option>
+                                            @foreach ($dataTeacher as $teacher)
+                                                <option value="{{ $teacher->name }}">{{ $teacher->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mb-3">
+                                    <button type="submit" id="search-btn"
+                                        class="btn btn-outline-success col-6">Search</button>
+                                    <button type="reset" id="clean-btn"
+                                        class="btn btn-outline-secondary col-6">Clean</button>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-secondary col-12 btn-add"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Filter Modal -->
+
+
+        <!--start row-->
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-12 d-flex">
                 <div class="card radius-10 w-100">
                     <div class="card-header bg-transparent text-center">
                         <div class="row g-3 align-items-center justify-content-center">
                             <div class="col-auto">
-                                <h5 class="mb-0">All Lectures</h5>
+                                <h5 class="mb-0">Actions</h5>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-primary col-12" data-bs-toggle="modal" data-bs-target="#add-modal">
-                            Adding new Lectures
-                        </button>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-filter" data-bs-toggle="modal"
+                                    data-bs-target="#filter-modal">
+                                    Filter Lectures
+                                </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
+                                    data-bs-target="#add-modal">
+                                    Insert Lectures
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--end Lectures row-->
+        <!--end row-->
 
         <!--start data-table row-->
         <div class="row">
@@ -223,6 +315,14 @@
 
                 ajax: {
                     url: '{{ route('school.dashboard.lecture.getdata') }}',
+                    data: function(d) {
+                        d.title = $('#search-title').val();
+                        d.describtion = $('#search-describtion').val();
+                        d.link = $('#search-link').val();
+                        d.subject_id = $('#search-subject_id').val();
+                        d.teacher = $('#search-teacher').val();
+                    }
+
                 },
 
                 columns: [{

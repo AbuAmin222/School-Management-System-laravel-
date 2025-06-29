@@ -1,7 +1,7 @@
 @extends('dashboard.light.master')
 
 @section('title')
-    Learn School | The root page for level`s
+    Learn School | The root page for Grades
 @endsection
 
 @section('content')
@@ -81,7 +81,7 @@
         <!--End Section Modal-->
 
         <!--Start Grade Modal-->
-        <div class="modal fade" id="stagesModal" tabindex="-1" aria-labelledby="stagesModalLabel" aria-hidden="true">
+        <div class="modal fade" id="add-modal" tabindex="-1" aria-labelledby="stagesModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content text-center">
                     <div class="modal-header justify-content-between">
@@ -201,26 +201,74 @@
         </div>
         <!--End Grade Modal-->
 
-        <!--start row-->
-        <div class="row">
-            <div class="col-12 col-lg-12 col-xl-12 d-flex">
-                <div class="card radius-10 w-100">
-                    <div class="card-header bg-transparent text-center">
-                        <div class="row g-3 align-items-center justify-content-center">
-                            <div class="col-auto">
-                                <h5 class="mb-0">All Level`s</h5>
+        <!-- Start Filter Modal -->
+        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="gradesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                        <div class="card radius-10 w-100">
+                            <div class="card-header bg-transparent">
+                                <div class="row g-3 align-items-center">
+                                    <div class="w-100 d-flex justify-content-between align-items-center">
+                                        <h5 class="modal-title mb-0">Grades Filter</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+
+                                    <!-- Grade -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-grade" class="form-control search-input">
+                                            <option value="" selected disabled>Select Grade</option>
+                                            @foreach ($Grade_data as $grade)
+                                                <option value="{{ $grade->name }}">{{ $grade->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <!-- Stage -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-stage" class="form-control search-input">
+                                            <option value="" selected disabled>Select Stage</option>
+                                            @foreach ($Stage_data as $stage)
+                                                <option value="{{ $stage->name }}">{{ $stage->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-status" class="form-control search-input">
+                                            <option value="" selected disabled>Select Status</option>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">In-Active</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mb-3">
+                                    <button type="submit" id="search-btn"
+                                        class="btn btn-outline-success col-6">Search</button>
+                                    <button type="reset" id="clean-btn"
+                                        class="btn btn-outline-secondary col-6">Clean</button>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-secondary col-12 btn-add"
+                                    data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <button class="btn btn-primary col-12" data-bs-toggle="modal" data-bs-target="#stagesModal">
-                            View the acadimec levels
-                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!--end row-->
+        <!-- End Filter Modal -->
 
         <!--start row-->
         <div class="row">
@@ -229,7 +277,41 @@
                     <div class="card-header bg-transparent text-center">
                         <div class="row g-3 align-items-center justify-content-center">
                             <div class="col-auto">
-                                <h5 class="mb-0">All Level`s</h5>
+                                <h5 class="mb-0">Actions</h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-filter" data-bs-toggle="modal"
+                                    data-bs-target="#filter-modal">
+                                    Filter Grades
+                                </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
+                                    data-bs-target="#add-modal">
+                                    Activate Grades
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--end row-->
+
+
+
+        <!--start row-->
+        <div class="row">
+            <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                <div class="card radius-10 w-100">
+                    <div class="card-header bg-transparent text-center">
+                        <div class="row g-3 align-items-center justify-content-center">
+                            <div class="col-auto">
+                                <h5 class="mb-0">All Grades</h5>
                             </div>
                         </div>
                     </div>
@@ -239,8 +321,8 @@
                                 <thead class="table-light">
                                     <tr>
                                         <th>#ID</th>
-                                        <th>Name</th>
                                         <th>Stage-ID</th>
+                                        <th>Grade</th>
                                         <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
@@ -269,6 +351,12 @@
 
             ajax: {
                 url: "{{ route('school.dashboard.grade.getdata') }}",
+                data: function(d) {
+                    d.grade = $('#search-grade').val();
+                    d.stage = $('#search-stage').val();
+                    d.status = $('#search-status').val();
+                }
+
             },
 
             columns: [{
@@ -278,12 +366,13 @@
                     searchable: false,
                 },
                 {
-                    data: 'name',
-                    name: 'name',
-                    title: 'Name',
+                    data: 'grade',
+                    name: 'grade',
+                    title: 'Grades',
                     orderable: true,
                     searchable: true,
                 },
+
                 {
                     data: 'stage',
                     name: 'stage_id',
@@ -306,10 +395,12 @@
                     searchable: false,
                 },
             ],
-            // Arabic language
-            // language:{
-            //     url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/ar.json',
-            // },
+            //
+                // Arabic language
+                // language:{
+                //     url: '//cdn.datatables.net/plug-ins/1.13.4/i18n/ar.json',
+                // },
+            //
         });
 
         // ============ تحميل الحالة الحالية من الخادم ============

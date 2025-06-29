@@ -19,8 +19,27 @@ class LectureController extends Controller
     }
     function getdata(Request $request)
     {
-        $data = Lecture::query();
+        $data = Lecture::select('lectures.*', 'subjects.title as subject_title', 'teachers.name as teacher')
+            ->join('subjects', 'subjects.id', '=', 'lectures.subject_id')
+            ->join('teachers', 'teachers.id', '=', 'lectures.teacher_id');
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                // Map request keys to DB columns
+                $filters = [
+                    'title'       => 'lectures.title',
+                    'describtion' => 'lectures.describtion',
+                    'link'        => 'lectures.link',
+                    'subject_id'  => 'lectures.subject_id',
+                    'teacher'     => 'teachers.name',
+                ];
+
+                foreach ($filters as $requestKey => $dbColumn) {
+                    if ($request->filled($requestKey)) {
+                        $query->where($dbColumn, 'like', '%' . $request->get($requestKey) . '%');
+                    }
+                }
+
+            })
             ->addIndexColumn()
             ->addColumn('title', function ($query) {
                 return $query->title;
@@ -37,10 +56,10 @@ class LectureController extends Controller
                 ';
             })
             ->addColumn('subject_id', function ($query) {
-                return $query->subject->title;
+                return $query->subject_title;
             })
             ->addColumn('teacher', function ($query) {
-                return $query->teacher->name;
+                return $query->teacher;
             })
             ->addColumn('action', function ($query) {
                 $data_attr = '';

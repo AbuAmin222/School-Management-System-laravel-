@@ -803,7 +803,7 @@
             });
 
         });
-        $('.btn-add').on('click', function(e) {
+        $('.btn-add, .btn-update, .btn').on('click', function(e) {
             $('input').removeClass('is-invalid');
             $('select').removeClass('is-invalid');
             $('.invalid-feedback').text('');

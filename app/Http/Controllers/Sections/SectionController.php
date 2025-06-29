@@ -11,12 +11,27 @@ class SectionController extends Controller
 {
     function index()
     {
-        return view('dashboard.sections.index');
+        $data = Section::query()->get();
+        return view('dashboard.sections.index', compact('data'));
     }
     function getdata(Request $request)
     {
         $data = Section::query();
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                $filters = [
+                    'name',
+                    'status',
+                ];
+                foreach ($filters as $field) {
+                    if ($request->filled('status')) {
+                        $query->where('status', $request->status); // تطابق تام، بدون like
+                    }
+                    if ($request->filled($field)) {
+                        $query->where($field, 'like', '%' . $request->get($field) . '%');
+                    }
+                }
+            })
             ->addIndexColumn()
             ->addColumn('name', function ($query) {
                 return 'Section ' . ' ' . $query->name;
@@ -60,7 +75,6 @@ class SectionController extends Controller
 
     function add(Request $request)
     {
-        // dd($request);
         $newcount = (int)$request->count_section;
         $currentcount = Section::count();
 

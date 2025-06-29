@@ -19,8 +19,27 @@ class OwnerController extends Controller
 
     public function getdata(Request $request)
     {
-        $data = Owner::query();
+        $data = Owner::select('owners.*', 'users.email')
+            ->join('users', 'owners.user_id', '=', 'users.id');
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                $filters = [
+                    'username',
+                    'email',
+                    'phone',
+                    'address',
+                    'permission',
+                    'status'
+                ];
+                foreach ($filters as $field) {
+                    if ($request->filled($field)) {
+                        $query->where($field, 'like', '%' . $request->get($field) . '%');
+                    }
+                }
+                if ($request->filled('email')) {
+                    $query->where('users.email', 'like', '%' . $request->get('email') . '%');
+                }
+            })
             ->addIndexColumn()
             ->addColumn('image', function ($query) {
                 $url = asset('uploads/owners/' . $query->image); // adjust the path as needed

@@ -219,7 +219,7 @@
                             <div class="card-header bg-transparent">
                                 <div class="row g-3 align-items-center">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h5 class="modal-title mb-0">Filter</h5>
+                                        <h5 class="modal-title mb-0">TeachersFilter</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
@@ -352,7 +352,7 @@
                     <div class="card-header bg-transparent text-center">
                         <div class="row g-3 align-items-center justify-content-center">
                             <div class="col-auto">
-                                <h5 class="mb-0">All Teachers</h5>
+                                <h5 class="mb-0">Actions</h5>
                             </div>
                         </div>
                     </div>

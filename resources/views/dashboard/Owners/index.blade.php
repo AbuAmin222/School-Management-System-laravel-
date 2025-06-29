@@ -227,26 +227,124 @@
         </div>
         <!--End add Owners Modal-->
 
-        <!--start Owners row-->
+        <!-- Start Filter Modal -->
+        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="ownersModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="col-12 col-lg-12 col-xl-12 d-flex">
+                        <div class="card radius-10 w-100">
+                            <div class="card-header bg-transparent">
+                                <div class="row g-3 align-items-center">
+                                    <div class="w-100 d-flex justify-content-between align-items-center">
+                                        <h5 class="modal-title mb-0">Owners Filter</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
+                                    <div class="col">
+                                        <div class="d-flex align-items-center justify-content-end gap-3 cursor-pointer">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+
+                                    <!-- Username -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-username" class="form-control search-input"
+                                            placeholder="Username">
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-email" class="form-control search-input"
+                                            placeholder="Email">
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="phone" id="search-phone" class="form-control search-input"
+                                            placeholder="Phone Number">
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="col-md-4 mb-3">
+                                        <input type="text" id="search-address" class="form-control search-input"
+                                            placeholder="Address">
+                                    </div>
+
+                                    <!-- Permission -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-permission" class="form-control search-input">
+                                            <option value="" selected disabled>Select Permission</option>
+                                            <option value="admin"> Admin </option>
+                                            <option value="user"> User </option>
+                                            <option value="teacher"> Teacher </option>
+                                            <option value="student"> Student </option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Status -->
+                                    <div class="col-md-4 mb-3">
+                                        <select id="search-status" class="form-control search-input">
+                                            <option value="" selected disabled>Select Status</option>
+                                            <option value="active">Active</option>
+                                            <option value="inactive">In-Active</option>
+                                        </select>
+                                    </div>
+
+                                </div>
+                                <!-- Buttons -->
+                                <div class="d-flex justify-content-end gap-2 mb-3">
+                                    <button type="submit" id="search-btn"
+                                        class="btn btn-outline-success col-6">Search</button>
+                                    <button type="reset" id="clean-btn"
+                                        class="btn btn-outline-secondary col-6">Clean</button>
+                                </div>
+
+                                <button type="button" class="btn btn-outline-secondary col-12 btn-add"
+                                    data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End Filter Modal -->
+
+
+        <!--start row-->
         <div class="row">
             <div class="col-12 col-lg-12 col-xl-12 d-flex">
                 <div class="card radius-10 w-100">
                     <div class="card-header bg-transparent text-center">
                         <div class="row g-3 align-items-center justify-content-center">
                             <div class="col-auto">
-                                <h5 class="mb-0">All Owners</h5>
+                                <h5 class="mb-0">Actions</h5>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        <button class="btn btn-primary col-12" data-bs-toggle="modal" data-bs-target="#add-modal">
-                            Adding new Owners
-                        </button>
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-filter" data-bs-toggle="modal"
+                                    data-bs-target="#filter-modal">
+                                    Filter Owners
+                                </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
+                                    data-bs-target="#add-modal">
+                                    Insert Owner
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <!--end Owners row-->
+        <!--end row-->
 
         <!--start data-table row-->
         <div class="row">
@@ -292,42 +390,6 @@
 
 @section('js')
     <script>
-        // <For shown image:></For>
-        // Preview for Add Form
-        document.getElementById('image_add').addEventListener('change', function() {
-            const file = this.files[0];
-            const preview = document.getElementById('preview-image-add');
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    preview.src = reader.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            } else {
-                preview.style.display = 'none';
-            }
-        });
-
-        // Preview for Update Form
-        document.getElementById('image_update').addEventListener('change', function() {
-            const file = this.files[0];
-            const preview = document.getElementById('preview-image-update');
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function() {
-                    preview.src = reader.result;
-                    preview.style.display = 'block';
-                }
-                reader.readAsDataURL(file);
-            } else {
-                preview.style.display = 'none';
-            }
-        });
-        // </For shown image:></For>
-
         var table;
         $(document).ready(function() {
             table = $('#datatable').DataTable({
@@ -337,6 +399,15 @@
 
                 ajax: {
                     url: '{{ route('school.dashboard.owner.getdata') }}',
+                    data: function(d) {
+                        d.username = $('#search-username').val();
+                        d.email = $('#search-email').val();
+                        d.phone = $('#search-phone').val();
+                        d.address = $('#search-address').val();
+                        d.permission = $('#search-permission').val();
+                        d.status = $('#search-status').val();
+                    }
+
                 },
 
                 columns: [{
@@ -484,5 +555,40 @@
 
             });
         });
+        // <For shown image:></For>
+        // Preview for Add Form
+        document.getElementById('image_add').addEventListener('change', function() {
+            const file = this.files[0];
+            const preview = document.getElementById('preview-image-add');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+
+        // Preview for Update Form
+        document.getElementById('image_update').addEventListener('change', function() {
+            const file = this.files[0];
+            const preview = document.getElementById('preview-image-update');
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    preview.src = reader.result;
+                    preview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                preview.style.display = 'none';
+            }
+        });
+        // </For shown image:></For>
     </script>
 @endsection

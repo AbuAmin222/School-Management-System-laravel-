@@ -21,8 +21,42 @@ class StudentController extends Controller
     }
     function getdata(Request $request)
     {
-        $data = Student::query();
+        $data = Student::select('students.*', 'users.email', 'sections.name as section_name', 'grades.name as grade_name')
+            ->join('users', 'users.id', '=', 'students.user_id')
+            ->join('sections', 'sections.id', '=', 'students.section_id')
+            ->join('grades', 'grades.id', '=', 'students.grade_id');
+
         return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                $filters = [
+                    'first_name' => 'students.first_name',
+                    'parent_name' => 'students.parent_name',
+                    'last_name' => 'students.last_name',
+                    'phone' => 'students.parent_phone',
+                    'date_of_birth' => 'students.date_of_birth',
+                    'email' => 'users.email',
+                    'section_id' => 'students.section_id',
+                    'grade_id' => 'students.grade_id',
+                    'gender' => 'students.gender',
+                ];
+
+                foreach ($filters as $filter => $column) {
+                    if ($request->filled($filter)) {
+                        if (in_array($filter, ['section_id', 'grade_id', 'gender'])) {
+                            $query->where($column, $request->get($filter));
+                        } else {
+                            $query->where($column, 'like', '%' . $request->get($filter) . '%');
+                        }
+                    }
+                }
+
+                if ($request->filled('start_date') && $request->filled('end_date')) {
+                    $query->whereBetween('students.date_of_birth', [
+                        $request->start_date,
+                        $request->end_date,
+                    ]);
+                }
+            })
             ->addIndexColumn()
             ->addColumn('full_name', function ($query) {
                 return $query->first_name . ' ' . $query->parent_name . ' ' . $query->last_name;
