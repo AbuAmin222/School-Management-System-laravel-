@@ -8,8 +8,14 @@ use App\Models\Section;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Spatie\SimpleExcel\SimpleExcelReader;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Str;
+use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class StudentController extends Controller
 {
@@ -214,5 +220,120 @@ class StudentController extends Controller
         $student->delete();
 
         return response()->json(['success' => 'Deleting student was successfully...']);
+    }
+
+    function import(Request $request)
+    {
+        $request->validate([
+            'excel-data' => 'required|mimes:xlsx',
+        ], [
+            'file.required' => 'The File is required',
+            'file.mimes' => 'The File must be a xlsx file only',
+        ]);
+
+        $file = $request->file('excel-data');
+        $name = 'Learn_School_' . time() . '_' . rand() . $file->getClientOriginalName();
+        $file->move(public_path('uploads\files\excels'), $name);
+
+        // $path = public_path('uploads\files\excels') . DIRECTORY_SEPARATOR . $name;
+        $path = public_path('uploads\files\excels\\' . $name);
+        SimpleExcelReader::create($path)->getRows()->each(function (array $row) {
+            $validation = Validator::make($row, [
+                'first_name' => 'required',
+                'parent_name' => 'required',
+                'last_name' => 'required',
+                'parent_phone' => 'required',
+                'date_of_birth' => 'required',
+                'email' => 'required|email|unique:users,email,',
+                'grade' => 'required',
+                'section' => 'required',
+                'gender' => 'required',
+            ],[
+                'first_name.required' => 'The First Name is required',
+                'parent_name.required' => 'The Parent Name is required',
+                'last_name.required' => 'The Last Name is required',
+                'parent_phone.required' => 'The Parent Phone is required',
+                'date_of_birth.required' => 'The Date Of Birth is required',
+                'email.required' => 'The Email is required',
+                'email.email' => 'The Email must be a valid email address',
+                'email.unique' => 'The Email has already been taken',
+                'grade.required' => 'The Grade is required',
+                'section.required' => 'The Section is required',
+                'gender.required' => 'The Gender is required',
+            ]);
+            if($validation->fails()){
+                Log::warning('Error Occured in this row: ' . $row);
+                return;
+            }
+            $user = User::query()->where('email', $row['email'])->first();
+
+            if (!$user) {
+                $password = Str::random(10);
+                $user = User::create([
+                    'email' => $row['email'],
+                    'password' => Hash::make($password),
+                ]);
+            }
+
+            $grade = Grade::query()->where('tag', $row['grade'])->first();
+            $section = Section::query()->where('name', $row['section'])->first();
+
+            Student::updateorCreate([
+                'user_id' => $user->id,
+            ], [
+                'first_name' => $row['first_name'],
+                'parent_name' => $row['parent_name'],
+                'last_name' => $row['last_name'],
+                'parent_phone' => $row['parent_phone'],
+                'date_of_birth' => $row['date_of_birth'],
+                'section_id' => $section->id,
+                'grade_id' => $grade->id,
+                'gender' => match (strtolower($row['gender'])) {
+                    'm' => 'male',
+                    'f', 'fm' => 'female',
+                    default => 'male'
+                },
+            ]);
+        });
+
+        return response()->json(['success' => 'Success importing file (' . $file->getClientOriginalName() . ').']);
+    }
+
+    function export()
+    {
+        $directory = public_path('exports');
+
+        if (!File::exists($directory)) {
+            File::makeDirectory($directory, 0755, true);
+        }
+
+        $path = public_path('exports/students_export_' . time() . '.xlsx');
+        $students = Student::query()->with('user', 'section', 'grade')->get();
+
+        SimpleExcelWriter::create($path)->addHeader([
+            'First Name',
+            'Parent Name',
+            'Last Name',
+            'Parent Phone',
+            'Date Of Birth',
+            'Email',
+            'Grade',
+            'Section',
+            'Gender',
+        ])->addRows($students->map(function ($student) {
+            return [
+                $student->first_name,
+                $student->parent_name,
+                $student->last_name,
+                $student->parent_phone,
+                $student->date_of_birth,
+                $student->user->email,
+                $student->grade->name,
+                $student->section->name,
+                $student->gender,
+            ];
+        }));
+
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 }

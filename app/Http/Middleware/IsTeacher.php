@@ -17,14 +17,10 @@ class IsTeacher
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
 
-        if (!$user) {
-            abort(403, 'Haven`t access to this page as teacher.');
+        if (!Auth::check() || !Auth::user()->teacher !== null) {
+            abort(403, 'Haven`t access to this page only for teacher.');
         }
-        // if (!$user || !Teacher::where('user_id', $user->id)->exists()) {
-        //     abort(403, 'Haven`t access to this page as teacher.');
-        // }
         return $next($request);
     }
 }

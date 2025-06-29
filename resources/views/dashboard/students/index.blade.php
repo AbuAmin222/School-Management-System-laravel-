@@ -238,6 +238,47 @@
         </div>
         <!--End add student Modal-->
 
+        <!--Start add student by excel Modal-->
+        <div class="modal fade" id="import-modal" tabindex="-1" aria-labelledby="studentsModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="studentsModalLabel">Import Students excel source file</h5>
+                        <button type="button" class="btn-close ms-0" data-bs-dismiss="modal"
+                            aria-label="إغلاق"></button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="container">
+                            <form method="post" action="{{ route('school.dashboard.student.import') }}"
+                                id="import-form" enctype="multipart/form-data">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+
+                                <div class="mb-4 form-group">
+                                    <label>Excel file: </label>
+                                    <input type="file" class="form-control" name = "excel-data" id = "excel-data"
+                                        placeholder="Enter Excel file source">
+                                    <div class="invalid-feedback"></div>
+
+                                </div>
+                                <button class="btn btn-outline-success col-12" type="submit">Import</button>
+                            </form>
+
+
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-secondary col-12" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--End add student by excel Modal-->
+
         <!-- Start Filter Modal -->
         <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="studentsModalLabel"
             aria-hidden="true">
@@ -381,8 +422,19 @@
                             <div class="col-12 mb-3">
                                 <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
                                     data-bs-target="#add-modal">
-                                    Insert Student
+                                    Insert New Student
                                 </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
+                                    data-bs-target="#import-modal">
+                                    Insert New Students by Excel file
+                                </button>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <a href="{{ route('school.dashboard.student.export') }}" class="btn btn-outline-primary w-100">
+                                    Install Excel Template
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -558,5 +610,29 @@
             $('#update-modal').modal('show');
 
         });
+
+        $(document).ready(function() {
+            $('#import-form').on('submit', function(e) {
+                e.preventDefault();
+
+                let formData = new FormData(this);
+                $.ajax({
+                    url: $(this).attr('action'),
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        swal('Success!', response.success, 'success');
+                        $('#import-form')[0].reset();
+                    },
+                    error: function(response) {
+                        swal('Error!', response.error, 'error');
+                        console.error(responseText);
+                    }
+                });
+            });
+        });
+
     </script>
 @endsection

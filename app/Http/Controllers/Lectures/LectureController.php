@@ -13,8 +13,10 @@ class LectureController extends Controller
 {
     function index()
     {
-        $data = Subject::all();
-        $dataTeacher = Teacher::all();
+        $data = Subject::all()->unique('title');
+        $dataTeacher = Teacher::all()->unique('name');
+        // $data = Subject::select('id', 'title')->groupBy('title')->get();
+
         return view('dashboard.lectures.index', compact('data', 'dataTeacher'));
     }
     function getdata(Request $request)
@@ -38,7 +40,6 @@ class LectureController extends Controller
                         $query->where($dbColumn, 'like', '%' . $request->get($requestKey) . '%');
                     }
                 }
-
             })
             ->addIndexColumn()
             ->addColumn('title', function ($query) {

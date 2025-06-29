@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Subjects;
 
 use App\Http\Controllers\Controller;
 use App\Models\Grade;
+use App\Models\Lecture;
 use App\Models\Subject;
 use App\Models\Teacher;
 use Illuminate\Http\Request;
@@ -13,8 +14,8 @@ class SubjectController extends Controller
 {
     function index()
     {
-        $TData = Teacher::select('id', 'name')->get();
-        $GData = Grade::select('id', 'name')->get();
+        $TData = Teacher::select('id', 'name')->distinct('title')->get(); // يضمن عدم تكرار العنوان
+        $GData = Grade::select('id', 'name')->distinct('name')->get();
         return view('dashboard.subjects.index', compact('TData', 'GData'));
     }
     function getdata(Request $request)
@@ -41,7 +42,6 @@ class SubjectController extends Controller
                     $query->where('subjects.grade_id', $request->grade); // من قائمة الصفوف
                 }
             })
-
             ->addIndexColumn()
             ->addColumn('title', function ($query) {
                 return $query->title;
@@ -54,6 +54,9 @@ class SubjectController extends Controller
                 } else {
                     return '<span class="btn btn-outline-light">No File</span>';
                 }
+            })
+            ->addColumn('lecture', function ($query) {
+                return '<a href="' . route('school.dashboard.subject.course_lecture', $query->id) . '" class="btn btn-outline-success"> Course Lectures </a>';
             })
             ->addColumn('teacher_id', function ($query) {
                 $teacher = Teacher::query()->findOrFail($query->teacher_id);
@@ -81,10 +84,9 @@ class SubjectController extends Controller
                 $action .= '<a ' . $data_attr . '  href="javascript:;" class="text-danger delete-btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Delete"><i class="bi bi-trash-fill"></i></a>';
                 return $action;
             })
-            ->rawColumns(['book', 'action'])
+            ->rawColumns(['title', 'lecture', 'book', 'teacher_id', 'grade_id', 'action'])
             ->make(true);
     }
-
     function add(Request $request)
     {
         $request->validate([
@@ -171,5 +173,58 @@ class SubjectController extends Controller
 
         abort(404, 'File not found.');
         return response()->json(['error' => 'File not found.']);
+    }
+    function course_lecture($id)
+    {
+        $subject_data = Subject::query()->findOrFail($id);
+        $teacher_data = Teacher::query()->get();
+        return view('dashboard.subjects.lectures', compact('subject_data', 'teacher_data'));
+    }
+
+    function getdatalectures(Request $request)
+    {
+        $subject_data = Subject::query()->findOrFail($request->id);
+        $data = Lecture::select('lectures.*', 'subjects.title as subject_title', 'teachers.name as teacher_name')
+            ->join('subjects', 'subjects.id', '=', 'lectures.subject_id')
+            ->join('teachers', 'teachers.id', '=', 'lectures.teacher_id')
+            ->where('subjects.title', $subject_data->title);
+        return DataTables::of($data)
+            ->filter(function ($query) use ($request) {
+                // Map request keys to DB columns
+                $filters = [
+                    'title'       => 'lectures.title',
+                    'describtion' => 'lectures.describtion',
+                    'teacher_name'     => 'teachers.name',
+                ];
+
+                foreach ($filters as $requestKey => $dbColumn) {
+                    if ($request->filled($requestKey)) {
+                        $query->where($dbColumn, 'like', '%' . $request->get($requestKey) . '%');
+                    }
+                }
+            })
+            ->addIndexColumn()
+            ->addColumn('title', function ($query) {
+                return $query->title;
+            })
+            ->addColumn('describtion', function ($query) {
+                return $query->describtion;
+            })
+            ->addColumn('lecture_link', function ($query) {
+                return '
+                    <a href="' . $query->link . '" target="_blank" rel="noopener noreferrer"
+                        class="btn btn-sm btn-outline-primary d-inline-flex align-items-center gap-1">
+                        <i class="bi bi-play-circle-fill"></i> Show Lecture
+                    </a>
+                ';
+            })
+            ->addColumn('subject_id', function ($query) {
+                return $query->subject_title;
+            })
+            ->addColumn('teacher', function ($query) {
+                return $query->teacher_name;
+            })
+            ->rawColumns(['title', 'describtion', 'lecture_link', 'subject_id', 'teacher'])
+            ->make(true);
     }
 }

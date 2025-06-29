@@ -40,6 +40,10 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+    <!-- SweetAlert2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+
     <title> @yield('title') </title>
     @yield('style')
     <style>
@@ -157,10 +161,17 @@
                                 </li>
                                 <li>
                                     <a class="dropdown-item" href="authentication-signup-with-header-footer.html">
-                                        <div class="d-flex align-items-center">
-                                            <div class=""><i class="bi bi-lock-fill"></i></div>
-                                            <div class="ms-3"><span>Logout</span></div>
-                                        </div>
+                                        <form action="{{ route('logout') }}" method="POST">
+                                            @csrf
+                                            <div class="d-flex align-items-center">
+                                                <div class=""><i class="bi bi-lock-fill"></i></div>
+                                                <div class="ms-3">
+                                                    <button type="submit" class="btn btn-link">
+                                                        <span>Logout</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
                                     </a>
                                 </li>
                             </ul>
@@ -589,7 +600,7 @@
                         alt="logo icon">
                 </div>
                 <div>
-                    <h4 class="logo-text">Snacked</h4>
+                    <h4 class="logo-text">Learn School</h4>
                 </div>
                 <div class="toggle-icon ms-auto"> <i class="bi bi-list"></i>
                 </div>
@@ -715,6 +726,10 @@
 
     <!--Toastr-->
     <script src="{{ asset('dashboard/toastr/app-assets/vendors/js/extensions/toastr.min.js') }}"></script>
+
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="http://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <!--Modal, Form-->

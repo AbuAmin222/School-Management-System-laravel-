@@ -1,15 +1,15 @@
 @extends('dashboard.light.master')
 
 @section('title')
-    Learn School|The root page for Subjects
+    Learn School|The root page for Course-Lectures
 @endsection
 
 @section('content')
     <!--start content-->
     <main class="page-content">
 
-        <!--Start Update Subject Modal-->
-        <div class="modal fade" id="update-modal" tabindex="-1" aria-labelledby="stagesModalLabel" aria-hidden="true">
+        {{-- <!--Start Update Subject Modal-->
+           <div class="modal fade" id="update-modal" tabindex="-1" aria-labelledby="stagesModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -124,11 +124,10 @@
                 </div>
             </div>
         </div>
-        <!--End Adding Subject Modal-->
+        <!--End Adding Subject Modal--> --}}
 
         <!-- Start Filter Modal -->
-        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="teachersModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="filter-modal" tabindex="-1" aria-labelledby="teachersModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="col-12 col-lg-12 col-xl-12 d-flex">
@@ -136,7 +135,17 @@
                             <div class="card-header bg-transparent">
                                 <div class="row g-3 align-items-center">
                                     <div class="w-100 d-flex justify-content-between align-items-center">
-                                        <h5 class="modal-title mb-0">Filter</h5>
+                                        <div class="col-auto text-center w-100">
+                                            <h5 class="modal-title mb-0">
+                                                Lectures filtering for
+                                                <i>
+                                                    <span class="text-danger">
+                                                        {{ $subject_data->title }}
+                                                    </span>
+                                                </i>
+                                                course.
+                                            </h5>
+                                        </div>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                                             aria-label="Close"></button>
                                     </div>
@@ -154,28 +163,18 @@
                                             placeholder="Title">
                                     </div>
 
-                                    <!-- Book -->
+                                    <!-- Describtion -->
                                     <div class="col-md-4 mb-3">
-                                        <input type="name" id="search-book" class="form-control search-input"
-                                            placeholder="Book">
+                                        <input type="text" id="search-describtion" class="form-control search-input"
+                                            placeholder="Describtion">
                                     </div>
 
                                     <!-- Teacher Name -->
                                     <div class="col-md-4 mb-3">
-                                        <select name="teacher" id="search-teacher" class="form-control search-input">
+                                        <select name="teacher" id="search-teacher_name" class="form-control search-input">
                                             <option value="" selected disabled> Select Teacher </option>
-                                            @foreach ($TData as $teacher)
-                                                <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <!-- Grade -->
-                                    <div class="col-md-4 mb-3">
-                                        <select name="grade" id="search-grade" class="form-control search-input">
-                                            <option value="" selected disabled> Select Grade </option>
-                                            @foreach ($GData as $grade)
-                                                <option value="{{ $grade->id }}">{{ $grade->name }}</option>
+                                            @foreach ($teacher_data as $teacher)
+                                                <option value="{{ $teacher->name }}">{{ $teacher->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -220,12 +219,6 @@
                                     Filter Subject
                                 </button>
                             </div>
-                            <div class="col-12 mb-3">
-                                <button class="btn btn-outline-primary w-100 btn-add" data-bs-toggle="modal"
-                                    data-bs-target="#add-modal">
-                                    Insert Subject
-                                </button>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -240,7 +233,10 @@
                     <div class="card-header bg-transparent text-center">
                         <div class="row g-3 align-items-center justify-content-center">
                             <div class="col-auto">
-                                <h5 class="mb-0">View All Subjects</h5>
+                                <h5 class="mb-0">
+                                    View all lectures for
+                                    <b><i><span class="text-success">{{ $subject_data->title }}</span></i></b>
+                                </h5>
                             </div>
                         </div>
                     </div>
@@ -251,10 +247,10 @@
                                     <tr>
                                         <th>#ID</th>
                                         <th>Title</th>
-                                        <th>Book</th>
-                                        <th>Course Lectures</th>
+                                        <th>Describtion</th>
+                                        <th>Lecture link</th>
                                         <th>Teacher</th>
-                                        <th>Grade</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -280,12 +276,12 @@
             responsive: true,
 
             ajax: {
-                url: '{{ route('school.dashboard.subject.getdata') }}',
+                url: '{{ route('school.dashboard.subject.getdata.lectures') }}',
                 data: function(d) {
+                    d.id = {{ $subject_data->id }};
                     d.title = $('#search-title').val();
-                    d.book = $('#search-book').val();
-                    d.teacher = $('#search-teacher').val();
-                    d.grade = $('#search-grade').val();
+                    d.describtion = $('#search-describtion').val();
+                    d.teacher_name = $('#search-teacher_name').val();
                 }
 
             },
@@ -304,32 +300,32 @@
                     searchable: true,
                 },
                 {
-                    data: 'book',
-                    name: 'book',
-                    title: 'Book',
+                    data: 'describtion',
+                    name: 'describtion',
+                    title: 'Describtion',
                     orderable: true,
                     searchable: true,
                 },
                 {
-                    data: 'lecture',
-                    name: 'lecture',
-                    title: 'Course Lectures',
+                    data: 'lecture_link',
+                    name: 'lecture_link',
+                    title: 'Lecture link',
                     orderable: false,
                     searchable: false,
                 },
                 {
-                    data: 'teacher_id',
-                    name: 'teacher_id',
+                    data: 'teacher',
+                    name: 'teacher',
                     title: 'Teacher',
                     orderable: true,
                     searchable: true,
                 },
                 {
-                    data: 'grade_id',
-                    name: 'grade_id',
-                    title: 'Grade',
-                    orderable: true,
-                    searchable: true,
+                    data: 'action',
+                    name: 'action',
+                    title: 'Actions',
+                    orderable: false,
+                    searchable: false,
                 },
             ],
             // Arabic language

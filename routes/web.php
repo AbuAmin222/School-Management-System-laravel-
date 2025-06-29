@@ -82,73 +82,84 @@ Route::get('/Test', function () {
 
 
 Route::prefix('/LearnSchool')->name('school.')->group(function () {
-    Route::prefix('/Dashboard')->name('dashboard.')->group(function () {
-        Route::get('/', function () {
-            return view('dashboard.light.index');
-        });
-        Route::prefix('/View')->name('view.')->controller(IndexController::class)->group(function () {
-            Route::get('/', 'light')->name('index');
-            Route::get('/Light', 'light')->name('light');
-            Route::get('/Dark', 'dark')->name('dark');
-        });
-        Route::prefix('/Owners')->name('owner.')->controller(OwnerController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/Add', 'add')->name('add');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::post('/Update', 'update')->name('update');
-            Route::post('/Delete', 'delete')->name('delete');
-            Route::post('/Active', 'active')->name('active');
-        });
-        Route::prefix('/Grades')->name('grade.')->controller(GradeController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::post('/Add', 'add')->name('add');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::get('/Get-Active-Grades', 'getactive')->name('getactive');
-            Route::get('/Get-Active-Sections', 'getactivesection')->name('getactive.section');
-            Route::get('/Get-Active-Stages', 'getactivestage')->name('getactive.stage');
-            Route::post('/Add-Section', 'addsection')->name('addsection');
-            Route::post('/Change-Master', 'changemaster')->name('changemaster');
-        });
+    Route::prefix('/Dashboard')->middleware(['auth'])->name('dashboard.')->group(function () {
+        Route::middleware('admin')->group(function () {
+            Route::get('/', function () {
+                return view('dashboard.light.index');
+            })->name('index');
+            Route::prefix('/View')->name('view.')->controller(IndexController::class)->group(function () {
+                Route::get('/', 'light')->name('index');
+                Route::get('/Light', 'light')->name('light');
+                Route::get('/Dark', 'dark')->name('dark');
+            });
+            Route::prefix('/Owners')->name('owner.')->controller(OwnerController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/Add', 'add')->name('add');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::post('/Update', 'update')->name('update');
+                Route::post('/Delete', 'delete')->name('delete');
+                Route::post('/Active', 'active')->name('active');
+            });
+            Route::prefix('/Grades')->name('grade.')->controller(GradeController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::post('/Add', 'add')->name('add');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::get('/Get-Active-Grades', 'getactive')->name('getactive');
+                Route::get('/Get-Active-Sections', 'getactivesection')->name('getactive.section');
+                Route::get('/Get-Active-Stages', 'getactivestage')->name('getactive.stage');
+                Route::post('/Add-Section', 'addsection')->name('addsection');
+                Route::post('/Change-Master', 'changemaster')->name('changemaster');
+            });
 
-        Route::prefix('/Sections')->name('section.')->controller(SectionController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::post('/Add', 'add')->name('add');
-            Route::post('/Change-Status', 'changestatus')->name('changestatus');
-        });
+            Route::prefix('/Sections')->name('section.')->controller(SectionController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::post('/Add', 'add')->name('add');
+                Route::post('/Change-Status', 'changestatus')->name('changestatus');
+            });
 
-        Route::prefix('/Teachers')->name('teacher.')->controller(TeacherController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::post('/Add', 'add')->name('add');
-            Route::post('/Update', 'update')->name('update');
-            Route::post('/Delete', 'delete')->name('delete');
-            Route::post('/Active', 'active')->name('active');
-        });
+            Route::prefix('/Teachers')->name('teacher.')->controller(TeacherController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::post('/Add', 'add')->name('add');
+                Route::post('/Update', 'update')->name('update');
+                Route::post('/Delete', 'delete')->name('delete');
+                Route::post('/Active', 'active')->name('active');
+            });
 
-        Route::prefix('/Subjects')->name('subject.')->controller(SubjectController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::post('/Add', 'add')->name('add');
-            Route::post('/Update', 'update')->name('update');
-            Route::post('/Delete', 'delete')->name('delete');
-            Route::get('/Download/{file_name}', 'download')->name('download');
-        });
+            Route::prefix('/Subjects')->name('subject.')->controller(SubjectController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::get('/Get-Data-Lectures', 'getdatalectures')->name('getdata.lectures');
+                Route::get('/Course-Lectures/{id}', 'course_lecture')->name('course_lecture');
+                Route::post('/Add', 'add')->name('add');
+                Route::post('/Update', 'update')->name('update');
+                Route::post('/Delete', 'delete')->name('delete');
+                Route::get('/Download/{file_name}', 'download')->name('download');
+            });
 
-        Route::prefix('/Students')->name('student.')->controller(StudentController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::post('/Add', 'add')->name('add');
-            Route::post('/Update', 'update')->name('update');
-            Route::post('/Delete', 'delete')->name('delete');
-        });
+            Route::prefix('/Students')->name('student.')->controller(StudentController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::post('/Add', 'add')->name('add');
+                Route::post('/Update', 'update')->name('update');
+                Route::post('/Delete', 'delete')->name('delete');
+                Route::post('/Import', 'import')->name('import');
+                Route::get('/Export', 'export')->name('export');
+            });
 
-        Route::prefix('/Lectures')->name('lecture.')->controller(LectureController::class)->group(function () {
-            Route::get('/', 'index')->name('index');
-            Route::get('/Get-Data', 'getdata')->name('getdata');
-            Route::post('/Add', 'add')->name('add');
-            Route::post('/Update', 'update')->name('update');
-            Route::post('/Delete', 'delete')->name('delete');
+            Route::prefix('/Lectures')->name('lecture.')->controller(LectureController::class)->group(function () {
+                Route::get('/', 'index')->name('index');
+                Route::get('/Get-Data', 'getdata')->name('getdata');
+                Route::post('/Add', 'add')->name('add');
+                Route::post('/Update', 'update')->name('update');
+                Route::post('/Delete', 'delete')->name('delete');
+            });
+        });
+        Route::prefix('/Teachers')->middleware('teacher')->group(function () {
+            Route::get('/', function () {
+                return view('dashboard.light.index');
+            })->name('index');
         });
     });
 });

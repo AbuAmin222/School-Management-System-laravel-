@@ -18,10 +18,9 @@ class IsAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = Auth::user();
 
-        if (!$user || Teacher::where('user_id', $user->id)->exists() || Student::where('user_id', $user->id)->exists()) {
-            abort(403, 'Don`t have admin access permissions.');
+        if (!Auth::check() || !Auth::user()->admin || Auth::user()->teacher !== null) {
+            abort(403, 'Don`t have access permissions only for owners.');
         }
 
         return $next($request);
