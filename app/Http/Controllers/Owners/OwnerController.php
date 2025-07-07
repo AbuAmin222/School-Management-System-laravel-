@@ -135,7 +135,7 @@ class OwnerController extends Controller
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '_' . $image->getClientOriginalName();
-            $image->move(public_path('uploads/owners'), $imageName); // Save to public/uploads/owners
+            $image->move(public_path('uploads/images/owners'), $imageName); // Save to public/uploads/owners
         }
 
         $user = User::create([
@@ -206,7 +206,7 @@ class OwnerController extends Controller
 
             $image = $request->file('image');
             $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('uploads/owners'), $imageName);
+            $image->move(public_path('uploads/images/owners'), $imageName);
             $data['image'] = $imageName;
         }
 

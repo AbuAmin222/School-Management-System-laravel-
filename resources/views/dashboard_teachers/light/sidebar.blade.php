@@ -34,7 +34,7 @@
                 </li>
             </ul>
         </li>
-        @if (optional(auth()->user()->owner)->permission === 'admin')
+        @if (!auth()->user()->teacher)
             <li class="menu-label">Adminstrator Tools</li>
             <li>
                 <a href="javascript:;" class="has-arrow">
@@ -120,7 +120,7 @@
                     </li>
                 </ul>
             </li>
-        @elseif (optional(auth()->user()->owner)->permission === 'teacher')
+        @else
             <li class="menu-label">Teachers Tools</li>
             <li>
                 <a href="javascript:;" class="has-arrow">
@@ -165,8 +165,7 @@
                     <div class="menu-title">Lectures</div>
                 </a>
                 <ul>
-                    <li> <a href="{{ route('school.dashboard.teacher_panel.lecture.index') }}"><i
-                                class="bi bi-circle"></i>All
+                    <li> <a href="{{ route('school.dashboard.lecture.index') }}"><i class="bi bi-circle"></i>All
                             Lectures</a>
                     </li>
                 </ul>
@@ -183,13 +182,8 @@
                     </li>
                 </ul>
             </li>
-        @elseif (optional(auth()->user()->owner)->permission === 'student')
-            <li class="menu-label">Students Tools</li>
-        @elseif (optional(auth()->user()->owner)->permission === 'user')
-            <li class="menu-label">Users Tools</li>
-
-
         @endif
+
 
         <li class="menu-label">Others</li>
         <li>

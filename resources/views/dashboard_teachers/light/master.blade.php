@@ -97,32 +97,20 @@
                                 <div class="user-setting d-flex align-items-center">
                                     @php
                                         $user = Auth::user(); // المستخدم الحالي
-                                        $type = 'images/'; // اسم المجلد
+                                        $type = 'owners'; // اسم المجلد
 
                                         if ($user->owner && $user->owner->permission === 'admin') {
-                                            $type .= 'owners';
                                             $image = $user->owner->image;
                                             $name = $user->owner->username;
-                                            $permission = 'Administrator';
+                                            $permission = $user->owner->permission;
                                         } elseif ($user->owner && $user->owner->permission === 'teacher') {
-                                            $type .= 'teachers';
-                                            $image = $user->teacher->image;
-                                            $name = $user->teacher->username;
-                                            $permission = 'Teacher';
-                                        } elseif ($user->owner && $user->owner->permission === 'student') {
-                                            $type .= 'students';
-                                            $image = $user->students->image;
+                                            // $image = $user->owner->image;
                                             $name = $user->owner->username;
-                                            $permission = 'Student';
-                                        } elseif ($user->guset && $user->guset->permission === 'user') {
-                                            $type .= 'users';
-                                            $image = $user->guset->image;
-                                            $name = $user->guset->username;
-                                            $permission = 'User';
+                                            $permission = 'Teacher';
                                         } else {
-                                            $type .= 'others'; // إذا لم يكن له تصنيف معروف
-                                            $image = 'user1.png';
-                                            $name = 'Default';
+                                            $type = 'owners'; // إذا لم يكن له تصنيف معروف
+                                            $image = '1750665219_68590803a0cfc_OIP (8).jpg';
+                                            $name = 'user';
                                             $permission = 'Default';
                                         }
 

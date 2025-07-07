@@ -16,7 +16,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create(): View
     {
-        return view('auth.login');
+        return view('login.authentication-signin');
     }
 
     /**
@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
             return redirect()->route('school.dashboard.index');
         }
 
-        return redirect()->intended('/LearnSchool/Dashboard');
+        return redirect()->route('school.dashboard.index');
     }
 
     /**
@@ -47,6 +47,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect(route('logout'));
     }
 }

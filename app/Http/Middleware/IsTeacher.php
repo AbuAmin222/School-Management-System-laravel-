@@ -18,7 +18,7 @@ class IsTeacher
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (!Auth::check() || !Auth::user()->teacher !== null) {
+        if (!Auth::check() || !Auth::user()->owner->permission == 'teacher' || !Auth::user()->owner->permission == 'admin') {
             abort(403, 'Haven`t access to this page only for teacher.');
         }
         return $next($request);

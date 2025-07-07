@@ -19,7 +19,7 @@ class IsAdmin
     public function handle(Request $request, Closure $next): Response
     {
 
-        if (!Auth::check() || !Auth::user()->admin || Auth::user()->teacher !== null) {
+        if (!Auth::check() || !Auth::user()->owner->permission == 'admin') {
             abort(403, 'Don`t have access permissions only for owners.');
         }
 
