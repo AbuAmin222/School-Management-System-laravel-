@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('image');
             $table->enum('permission', ['admin', 'user', 'student', 'teacher'])->deault('user');
-            $table->string('gender');
+            $table->enum('gender', ['male', 'female', 'other']);
             $table->timestamps();
         });
     }

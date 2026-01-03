@@ -22,7 +22,8 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('parent_phone')->unique();
             $table->date('date_of_birth');
-            $table->enum('gender', ['male', 'female']);
+            $table->enum('permission', ['admin', 'user', 'student', 'teacher'])->deault('user');
+            $table->enum('gender', ['male', 'female', 'other']);
 
             $table->timestamps();
         });

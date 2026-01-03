@@ -20,7 +20,8 @@ return new class extends Migration
             $table->date('date_of_birth');
             $table->date('hire_date');
             $table->enum('qualification', ['diploma', 'bachelors', 'master', 'doctora']);
-            $table->enum('gender', ['male', 'female']);
+            $table->enum('gender', ['male', 'female', 'other']);
+            $table->enum('permission', ['admin', 'user', 'student', 'teacher'])->deault('user');
             $table->enum('status', ['active', 'inactive'])->deault('active');
             $table->timestamps();
         });
