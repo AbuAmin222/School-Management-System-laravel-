@@ -6,7 +6,7 @@ services:
             dockerfile: Dockerfile
         image: laravel-app
         container_name: final_project_app
-        working_dir: /var/www #  للتأكد من المسار
+        working_dir: /var/www
         ports:
             - "8000:8000"
         volumes:
@@ -15,7 +15,8 @@ services:
         depends_on:
             - db
 
-    # خدمة قاعدة البيانات MySQL
+    # :خدمة قاعدة البيانات
+    # MySQL
     db:
         image: mysql:8.0
         container_name: final_project_db
