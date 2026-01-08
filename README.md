@@ -55,3 +55,8 @@ docker compose up -d --build
 
 4. Database Initialization:
 docker compose exec app php artisan migrate:fresh --seed
+
+## 🌐 Production URL
+The project is deployed on Google Cloud Platform. 
+**Live Demo:** [https://8000-cs-6201696b-69ab-433d-8e69-ddf8ed789e8a.cs-europe-west4-bhnf.cloudshell.dev/](https://8000-cs-6201696b-69ab-433d-8e69-ddf8ed789e8a.cs-europe-west4-bhnf.cloudshell.dev/)
+*(Note: Link is session-based and active during Cloud Shell runtime)*.
